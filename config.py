@@ -175,19 +175,16 @@ extension_defaults = widget_defaults.copy()
 sep = widget.Sep(
     padding=1,
     linewidth=3,
-    size_percent=90,
 )
 
 
 def top_bar_widgets():
     widgets = [
         widget.GroupBox(highlight_method="block"),
-        sep,
         widget.CurrentLayout(),
-        sep,
         widget.WindowName(),
-        sep,
-        widget.Clock(format="%Y-%m-%d () %H:%M:%S"),
+        widget.Systray(),
+        widget.Clock(format="%Y-%m-%d %a %H:%M:%S"),
     ]
     return widgets
 
@@ -195,11 +192,6 @@ def top_bar_widgets():
 def bottom_bar_widgets():
     widgets = [
         widget.LaunchBar(progs=[("", "firefox"), ("Code", "code")]),
-        sep,
-        widget.Systray(),
-        sep,
-        widget.Memory(),
-        widget.Volume(),
     ]
     return widgets
 
