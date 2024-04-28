@@ -49,6 +49,8 @@ focus_on_window_activation = "smart"
 wmname = "LG3D"
 mod = "mod4"
 
+myTerm = "alacritty"
+
 modifier_keys = {
     "M": "mod4",
     "A": "mod1",
@@ -134,6 +136,7 @@ layouts = [
         single_margin=0,
     ),
     layout.Tile(**layout_theme),
+    # layout.Bsp(**layout_theme),
     layout.Max(),
 ]
 
@@ -166,24 +169,38 @@ def top_bar_widgets():
     return widgets
 
 
+def htop_handler():
+    return {"Button1": lambda: qtile.cmd_spawn(myTerm + " -e htop")}
+
+
 def bottom_bar_widgets():
     widgets = [
         # sep(),
         widget.LaunchBar(progs=[("", "firefox"), ("Code", "code")]),
-        # sep(),
-        widget.Spacer(),
-        # sep(),
-        widget.CPU(format=" {load_percent}%", update_interval=10),
-        widget.CPUGraph(frequency=5),
         sep(),
-        # widget.Memory(format="{MemUsed: .0f}{mm}", update_interval=5, measure_mem="G"),
+        widget.Spacer(),
+        sep(),
+        widget.CPU(
+            format=" {load_percent}%",
+            update_interval=10,
+            mouse_callbacks=htop_handler(),
+        ),
+        widget.CPUGraph(
+            frequency=5,
+            mouse_callbacks=htop_handler(),
+        ),
+        sep(),
         widget.Memory(
             format="{MemUsed: .0f}{mm}",
             update_interval=10,
             measure_mem="G",
             padding=0,
+            mouse_callbacks=htop_handler(),
         ),
-        widget.MemoryGraph(frequency=5),
+        widget.MemoryGraph(
+            frequency=5,
+            mouse_callbacks=htop_handler(),
+        ),
         # sep(),
         # widget.HDDBusyGraph(fmt="{}", device="sda2", frequency=5),
         sep(),
