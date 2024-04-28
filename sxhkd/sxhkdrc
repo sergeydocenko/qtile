@@ -4,7 +4,7 @@ super + Return
 super + space
     rofi -show drun -show-icons
 
-super + shift + space
+super + shift + @space
     rofi -show run -show-icons
 
 super + w
@@ -14,14 +14,13 @@ super + v
     rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 
 super + a
-    firefox --private-window
+    firefox
 
-super + 
+super + ctrl + a
     firefox --private-window
 
 Print
     flameshot gui
-
 
 super + g; t
     notify-send -a "SXHKD" "Game" "Let's play Terraria";\

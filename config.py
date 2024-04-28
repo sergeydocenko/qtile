@@ -238,9 +238,9 @@ def bottom_bar_widgets():
             frequency=5,
             mouse_callbacks=htop_handler("PERCENT_MEM"),
         ),
-        # sep(),
-        # widget.HDDBusyGraph(fmt="{}", device="sda2", frequency=5),
         sep(),
+        # widget.HDDBusyGraph(fmt="{}", device="sda2", frequency=5),
+        # sep(),
         # widget.Net(
         #    interface="wlp3s0", format=" {down} {up}", update_interval=3, padding=5
         # ),
