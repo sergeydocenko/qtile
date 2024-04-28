@@ -169,8 +169,8 @@ def top_bar_widgets():
     return widgets
 
 
-def htop_handler():
-    return {"Button1": lambda: qtile.cmd_spawn(myTerm + " -e htop")}
+def htop_handler(sort):
+    return {"Button1": lambda: qtile.cmd_spawn(myTerm + " -e htop --sort-key=" + sort)}
 
 
 def bottom_bar_widgets():
@@ -183,11 +183,11 @@ def bottom_bar_widgets():
         widget.CPU(
             format=" {load_percent}%",
             update_interval=10,
-            mouse_callbacks=htop_handler(),
+            mouse_callbacks=htop_handler("PERCENT_CPU"),
         ),
         widget.CPUGraph(
             frequency=5,
-            mouse_callbacks=htop_handler(),
+            mouse_callbacks=htop_handler("PERCENT_CPU"),
         ),
         sep(),
         widget.Memory(
@@ -195,11 +195,11 @@ def bottom_bar_widgets():
             update_interval=10,
             measure_mem="G",
             padding=0,
-            mouse_callbacks=htop_handler(),
+            mouse_callbacks=htop_handler("PERCENT_MEM"),
         ),
         widget.MemoryGraph(
             frequency=5,
-            mouse_callbacks=htop_handler(),
+            mouse_callbacks=htop_handler("PERCENT_MEM"),
         ),
         # sep(),
         # widget.HDDBusyGraph(fmt="{}", device="sda2", frequency=5),
