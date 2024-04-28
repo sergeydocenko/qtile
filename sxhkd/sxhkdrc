@@ -23,5 +23,9 @@ Print
     flameshot gui
 
 super + g; t
-    notify-send -a "SXHKD" "Game" "Let's play Terraria";\
+    notify-send -a "SXHKD" "Game" "Let's play Terraria"; \
     TERM=XTERM ~/games/terraria/game/Terraria.bin.x86_64
+
+super + t; r
+    { notify-send -a "SXHKD" "Redshift" "On"; redshift -O 5000, \
+      notify-send -a "SXHKD" "Redshift" "Off"; redshift -x }

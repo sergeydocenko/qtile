@@ -74,6 +74,16 @@ def kill_other_windows(qtile):
                 window.kill()
 
 
+@lazy.function
+def kill_other_windows_in_group(qtile):
+    Notfy("Pizda", "dfgs", "asdfasfd")
+    focused_win_id = qtile.currentWindow
+    group_name = qtile.current_group.name
+    for window in qtile.windows_map[group_name]:
+        if window != focused_win_id:
+            window.kill()
+
+
 # The keys will be here
 keys = [
     # Qtile WM Control
@@ -81,7 +91,7 @@ keys = [
     EzKey("C-A-x", lazy.shutdown()),
     EzKey("C-A-c", lazy.reload_config()),
     EzKey("M-x", lazy.window.kill()),
-    EzKey("M-d", kill_other_windows()),  # TODO: implement!!!
+    EzKey("M-d", kill_other_windows_in_group()),  # TODO: implement!!!
     # EzKey("M-r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     EzKey("M-<bracketleft>", lazy.prev_layout()),
     EzKey("M-<bracketright>", lazy.next_layout()),

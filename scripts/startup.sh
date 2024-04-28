@@ -7,9 +7,11 @@ pkill nm-applet
 pkill xfce4-power-manager 
 pkill sxhkd 
 pkill dunst
+pkill volumeicon
 
 greenclip daemon &
 nm-applet &
-xfce4-power-manager --daemon &
+xfce4-power-manager &
 sxhkd -c ~/.config/qtile/sxhkd/sxhkdrc &
 dunst &
+volumeicon &

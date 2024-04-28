@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-# TODO: Install all programm dependicies
+sudo pacman -S volumeicon libnotify dunst nm-applet redshift
+yay -S greenclip
