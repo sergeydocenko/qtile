@@ -1,3 +1,7 @@
+import os
+import subprocess
+import locale
+
 from libqtile import layout, bar, widget, hook, qtile
 from libqtile.lazy import lazy
 from libqtile.config import (
@@ -11,15 +15,8 @@ from libqtile.config import (
     DropDown,
     Match,
 )
-from os import path
-import os
-import subprocess
 
-# import colorscheme
-#
-# colors, backgroundColor, foregroundColor, workspaceColor, chordColor = (
-#    colorscheme.everforest()
-# )
+locale.setlocale(locale.LC_TIME, "en_US")
 
 colors = [
     ["#160B00", "#160B00"],  # background (dark grey) [0]
@@ -40,7 +37,7 @@ colors = [
 # workspaceColor = "#DE7B1B"
 # foregroundColorTwo = "#DE7B1B"
 
-qtile_path = path.join(path.expanduser("~"), ".config", "qtile")
+qtile_path = os.path.join(os.path.expanduser("~"), ".config", "qtile")
 
 main = None
 follow_mouse_focus = False
@@ -72,29 +69,29 @@ keys = [
     EzKey("C-A-x", lazy.shutdown()),
     EzKey("C-A-c", lazy.reload_config()),
     # To test
-    KeyChord(
-        [mod],
-        "q",
-        [
-            EzKey("r", lazy.restart()),
-            EzKey("x", lazy.shutdown()),
-            EzKey("c", lazy.reload_config()),
-            EzKey("t", lazy.spawn('notify-send -a "Huy" "Pizda" "Jigurda"')),
-            EzKey("y", Notfy("Huy", "Pizda", "Jigutda")),
-        ],
-    ),
-    # Window killing
-    EzKey("M-p", lazy.spawn('notify-send -a "Huy" "Pizda" "Jigurda"')),
+    # KeyChord(
+    #    [mod],
+    #    "q",
+    #    [
+    #        EzKey("r", lazy.restart()),
+    #        EzKey("x", lazy.shutdown()),
+    #        EzKey("c", lazy.reload_config()),
+    #        EzKey("t", lazy.spawn('notify-send -a "Huy" "Pizda" "Jigurda"')),
+    #        EzKey("y", Notfy("Huy", "Pizda", "Jigutda")),
+    #    ],
+    # ),
+    ## Window killing
+    # EzKey("M-p", lazy.spawn('notify-send -a "Huy" "Pizda" "Jigurda"')),
     EzKey("M-x", lazy.window.kill()),
-    EzKey("M-S-x", lazy.spawn("xkill")),
+    # EzKey("M-S-x", lazy.spawn("xkill")),
     # Launchers
-    EzKey("M-<Return>", lazy.spawn("alacritty")),
-    EzKey("M-S-<Return>", lazy.spawn("dolphin")),
-    EzKey("M-<space>", lazy.spawn("rofi -show drun -show-icons")),
-    EzKey("M-S-<space>", lazy.spawn("rofi -show run -show-icons")),
-    EzKey("M-S-<Tab>", lazy.spawn("rofi -show window -show-icons")),
-    EzKey("<Print>", lazy.spawn("flameshot gui")),
-    EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("alacritty")),
+    # EzKey("M-<Return>", lazy.spawn("alacritty")),
+    # EzKey("M-S-<Return>", lazy.spawn("dolphin")),
+    # EzKey("M-<space>", lazy.spawn("rofi -show drun -show-icons")),
+    # EzKey("M-S-<space>", lazy.spawn("rofi -show run -show-icons")),
+    # EzKey("M-w", lazy.spawn("rofi -show window -show-icons")),
+    # EzKey("<Print>", lazy.spawn("flameshot gui")),
+    # EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("alacritty")),
     # Change layout
     EzKey("M-<bracketleft>", lazy.prev_layout()),
     EzKey("M-<bracketright>", lazy.next_layout()),
@@ -172,26 +169,57 @@ widget_defaults = dict(
 
 extension_defaults = widget_defaults.copy()
 
-sep = widget.Sep(
-    padding=1,
-    linewidth=3,
-)
+
+def sep():
+    return widget.TextBox(text="•")
 
 
 def top_bar_widgets():
     widgets = [
+        # sep(),
         widget.GroupBox(highlight_method="block"),
+        sep(),
         widget.CurrentLayout(),
+        sep(),
+        # widget.CurrentLayoutIcon(),
+        # widget.PulseVolume(),
         widget.WindowName(),
+        widget.Spacer(),
         widget.Systray(),
-        widget.Clock(format="%Y-%m-%d %a %H:%M:%S"),
     ]
     return widgets
 
 
 def bottom_bar_widgets():
     widgets = [
+        # sep(),
         widget.LaunchBar(progs=[("", "firefox"), ("Code", "code")]),
+        # sep(),
+        widget.Spacer(),
+        # sep(),
+        widget.CPU(format=" {load_percent}%", update_interval=10),
+        widget.CPUGraph(frequency=5),
+        sep(),
+        # widget.Memory(format="{MemUsed: .0f}{mm}", update_interval=5, measure_mem="G"),
+        widget.Memory(
+            format="{MemUsed: .0f}{mm}",
+            update_interval=10,
+            measure_mem="G",
+            padding=0,
+        ),
+        widget.MemoryGraph(frequency=5),
+        # sep(),
+        # widget.HDDBusyGraph(fmt="{}", device="sda2", frequency=5),
+        sep(),
+        # widget.Net(
+        #    interface="wlp3s0", format=" {down} {up}", update_interval=3, padding=5
+        # ),
+        # widget.NetGraph(
+        #    interface="wlp3s0",
+        #    frequency=5,
+        # ),
+        # sep(),
+        widget.Clock(format="%Y-%m-%d %a %H:%M:%S"),
     ]
     return widgets
 
@@ -199,10 +227,10 @@ def bottom_bar_widgets():
 def init_screens():
     return [
         Screen(
-            wallpaper=path.join(qtile_path, "media", "triangle.jpg"),
+            wallpaper=os.path.join(qtile_path, "media", "triangle.jpg"),
             wallpaper_mode="stretch",
             top=bar.Bar(widgets=top_bar_widgets(), size=24),
-            bottom=bar.Bar(widgets=bottom_bar_widgets(), size=48),
+            bottom=bar.Bar(widgets=bottom_bar_widgets(), size=24),
         )
     ]
 
@@ -222,15 +250,22 @@ def set_floating(window):
         window.floating = True
 
 
-@hook.subscribe.startup_once
-def start_apps():
-    qtile.cmd_spawn(["xrandr --output eDP-1 --primary --mode 1280x720"])
-    qtile.cmd_spawn(["dunst&"])
-    qtile.cmd_spawn(["nm-applet&"])
-    qtile.cmd_spawn(["pamac-tray&"])
-    qtile.cmd_spawn(["xfce4-power-manager&"])
+# @hook.subscribe.startup_once
+# def start_apps():
+#    qtile.cmd_spawn(["xrandr --output eDP-1 --primary --mode 1280x720"])
+#    qtile.cmd_spawn(["dunst&"])
+#    qtile.cmd_spawn(["nm-applet&"])
+#    qtile.cmd_spawn(["pamac-tray&"])
+#    qtile.cmd_spawn(["xfce4-power-manager&"])
+
+
+# @hook.subscribe.startup_once
+# def autostart():
+#    once = os.path.expanduser("~/.config/qtile/scripts/autorun_once.sh")
+#    subprocess.call([home])
 
 
 @hook.subscribe.startup
-def start_always():
-    pass
+def startup():
+    startup = os.path.expanduser("~/.config/qtile/scripts/startup.sh")
+    subprocess.call([startup])
