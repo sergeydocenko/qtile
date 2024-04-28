@@ -1,5 +1,5 @@
 super + Return
-    alacritty
+    alacritty --config-file ~/.config/qtile/alacritty/alacritty.toml
         
 super + space
     rofi -show drun -show-icons

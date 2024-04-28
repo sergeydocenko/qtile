@@ -1,0 +1,25 @@
+[env]
+TERM = "xterm-256color"
+WINIT_X11_SCALE_FACTOR = "1.0"
+
+[shell]
+#args = ["-l", "-c", "tmux new -A -s default"]
+program = "/usr/bin/fish"
+
+[window]
+dynamic_padding = true
+
+[window.padding]
+x = 3
+y = 3
+
+[cursor]
+style = "Underline"
+vi_mode_style = "Block"
+
+[font]
+size = 14.0
+
+[font.normal]
+family = "Source Code Pro"
+style = "Medium"

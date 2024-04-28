@@ -68,31 +68,7 @@ keys = [
     EzKey("C-A-r", lazy.restart()),
     EzKey("C-A-x", lazy.shutdown()),
     EzKey("C-A-c", lazy.reload_config()),
-    # To test
-    # KeyChord(
-    #    [mod],
-    #    "q",
-    #    [
-    #        EzKey("r", lazy.restart()),
-    #        EzKey("x", lazy.shutdown()),
-    #        EzKey("c", lazy.reload_config()),
-    #        EzKey("t", lazy.spawn('notify-send -a "Huy" "Pizda" "Jigurda"')),
-    #        EzKey("y", Notfy("Huy", "Pizda", "Jigutda")),
-    #    ],
-    # ),
-    ## Window killing
-    # EzKey("M-p", lazy.spawn('notify-send -a "Huy" "Pizda" "Jigurda"')),
     EzKey("M-x", lazy.window.kill()),
-    # EzKey("M-S-x", lazy.spawn("xkill")),
-    # Launchers
-    # EzKey("M-<Return>", lazy.spawn("alacritty")),
-    # EzKey("M-S-<Return>", lazy.spawn("dolphin")),
-    # EzKey("M-<space>", lazy.spawn("rofi -show drun -show-icons")),
-    # EzKey("M-S-<space>", lazy.spawn("rofi -show run -show-icons")),
-    # EzKey("M-w", lazy.spawn("rofi -show window -show-icons")),
-    # EzKey("<Print>", lazy.spawn("flameshot gui")),
-    # EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("alacritty")),
-    # Change layout
     EzKey("M-<bracketleft>", lazy.prev_layout()),
     EzKey("M-<bracketright>", lazy.next_layout()),
     # Switch between windows
@@ -248,21 +224,6 @@ def set_floating(window):
         or window.window.get_wm_type() in floating_types
     ):
         window.floating = True
-
-
-# @hook.subscribe.startup_once
-# def start_apps():
-#    qtile.cmd_spawn(["xrandr --output eDP-1 --primary --mode 1280x720"])
-#    qtile.cmd_spawn(["dunst&"])
-#    qtile.cmd_spawn(["nm-applet&"])
-#    qtile.cmd_spawn(["pamac-tray&"])
-#    qtile.cmd_spawn(["xfce4-power-manager&"])
-
-
-# @hook.subscribe.startup_once
-# def autostart():
-#    once = os.path.expanduser("~/.config/qtile/scripts/autorun_once.sh")
-#    subprocess.call([home])
 
 
 @hook.subscribe.startup
