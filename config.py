@@ -64,6 +64,16 @@ def Notfy(source, title, message):
     lazy.spawn(f'notify-send -a "{source}" "{title}" "{message}"')
 
 
+@lazy.function
+def kill_other_windows(qtile):
+    """Kills all windows in the current group except the focused one."""
+    current_window = qtile.currentWindow
+    if current_window is not None:
+        for window in qtile.currentGroup.windows:
+            if window != current_window:
+                window.kill()
+
+
 # The keys will be here
 keys = [
     # Qtile WM Control
@@ -71,6 +81,8 @@ keys = [
     EzKey("C-A-x", lazy.shutdown()),
     EzKey("C-A-c", lazy.reload_config()),
     EzKey("M-x", lazy.window.kill()),
+    EzKey("M-d", kill_other_windows()),  # TODO: implement!!!
+    # EzKey("M-r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     EzKey("M-<bracketleft>", lazy.prev_layout()),
     EzKey("M-<bracketright>", lazy.next_layout()),
     # Switch between windows
@@ -94,12 +106,14 @@ keys = [
     EzKey("M-A-l", lazy.layout.flip_right()),
     EzKey("M-A-j", lazy.layout.flip_down()),
     EzKey("M-A-k", lazy.layout.flip_up()),
+    # Additional control
     EzKey("M-n", lazy.layout.normalize()),
     EzKey("M-z", lazy.window.toggle_fullscreen(), desc="Zoom window"),
     EzKey("M-f", lazy.window.toggle_floating()),
     EzKey("M-<Tab>", lazy.screen.toggle_group(), desc="Last active group"),
 ]
 
+# Create groups
 groups = [Group(i) for i in "123456789"]
 for i in groups:
     keys.extend(
@@ -109,6 +123,27 @@ for i in groups:
         ]
     )
 
+# Scratchpads
+groups.append(
+    ScratchPad(
+        "scratchpad",
+        [
+            DropDown(
+                "term",
+                "alacritty",
+                height=0.9,
+                width=0.9,
+                y=0.05,
+                x=0.05,
+                warp_pointer=True,
+            )
+        ],
+    )
+)
+
+keys.extend([EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("term"))])
+
+# Mouse settings
 mouse = [
     EzDrag(
         "M-<Button1>",
@@ -176,7 +211,9 @@ def htop_handler(sort):
 def bottom_bar_widgets():
     widgets = [
         # sep(),
-        widget.LaunchBar(progs=[("", "firefox"), ("Code", "code")]),
+        widget.LaunchBar(
+            progs=[("", "firefox"), ("Code", "code"), ("Audacious", "audacious -t")]
+        ),
         sep(),
         widget.Spacer(),
         sep(),
