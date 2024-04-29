@@ -187,7 +187,8 @@ layouts = [
 
 widget_defaults = dict(
     font="Source Code Pro",
-    fontsize=16,
+    # fontsize=16,
+    fontsize=20,
     padding=3,
 )
 
@@ -198,21 +199,24 @@ def sep():
     return widget.TextBox(text="•")
 
 
+def spacer():
+    return widget.Spacer(length=30)
+
+
 def top_bar_widgets():
     widgets = [
         widget.GroupBox(highlight_method="block"),
-        sep(),
-        widget.CurrentLayout(),
-        sep(),
+        spacer(),
+        widget.CurrentLayoutIcon(),
+        # widget.CurrentLayout(),
+        spacer(),
         # widget.CurrentLayoutIcon(),
         # widget.PulseVolume(),
         widget.WindowName(),
         widget.Spacer(),
-        sep(),
         widget.Battery(discharge_char="🔋", charge_char="🔌"),
-        sep(),
+        spacer(),
         widget.Systray(),
-        sep(),
     ]
     return widgets
 
@@ -225,13 +229,10 @@ def bottom_bar_widgets():
     widgets = [
         # TODO: Mouse ony kill!
         # widget.LaunchBar(progs=[("X", "xkill")]),
-        sep(),
         widget.LaunchBar(
             progs=[("", "firefox"), ("Code", "code"), ("Audacious", "audacious -t")]
         ),
-        sep(),
         widget.Spacer(),
-        sep(),
         widget.CPU(
             format=" {load_percent}%",
             update_interval=10,
@@ -241,7 +242,7 @@ def bottom_bar_widgets():
             frequency=5,
             mouse_callbacks=htop_handler("PERCENT_CPU"),
         ),
-        sep(),
+        spacer(),
         widget.Memory(
             format="{MemUsed: .0f}{mm}",
             update_interval=10,
@@ -253,19 +254,8 @@ def bottom_bar_widgets():
             frequency=5,
             mouse_callbacks=htop_handler("PERCENT_MEM"),
         ),
-        sep(),
-        # widget.HDDBusyGraph(fmt="{}", device="sda2", frequency=5),
-        # sep(),
-        # widget.Net(
-        #    interface="wlp3s0", format=" {down} {up}", update_interval=3, padding=5
-        # ),
-        # widget.NetGraph(
-        #    interface="wlp3s0",
-        #    frequency=5,
-        # ),
-        # sep(),
+        spacer(),
         widget.Clock(format="%Y-%m-%d %a %H:%M:%S"),
-        sep(),
     ]
     return widgets
 
