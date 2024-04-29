@@ -29,8 +29,8 @@ colors = [
     ["#FF8E1F", "#FF8E1F"],  # pink [7]
     ["#FF8E1F", "#FF8E1F"],  # purple [8]
     ["#FF8E1F", "#FF8E1F"],  # red [9]
-    ["#FF8E1F", "#FF8E1F"],
-]  # yellow [10]
+    ["#FF8E1F", "#FF8E1F"],  # yellow [10]
+]
 
 # backgroundColor = "#160B00"
 # foregroundColor = "#DE7B1B"
@@ -200,7 +200,6 @@ def sep():
 
 def top_bar_widgets():
     widgets = [
-        # sep(),
         widget.GroupBox(highlight_method="block"),
         sep(),
         widget.CurrentLayout(),
@@ -209,7 +208,11 @@ def top_bar_widgets():
         # widget.PulseVolume(),
         widget.WindowName(),
         widget.Spacer(),
+        sep(),
+        widget.Battery(discharge_char="🔋", charge_char="🔌"),
+        sep(),
         widget.Systray(),
+        sep(),
     ]
     return widgets
 
@@ -220,7 +223,9 @@ def htop_handler(sort):
 
 def bottom_bar_widgets():
     widgets = [
-        # sep(),
+        # TODO: Mouse ony kill!
+        # widget.LaunchBar(progs=[("X", "xkill")]),
+        sep(),
         widget.LaunchBar(
             progs=[("", "firefox"), ("Code", "code"), ("Audacious", "audacious -t")]
         ),
@@ -260,6 +265,7 @@ def bottom_bar_widgets():
         # ),
         # sep(),
         widget.Clock(format="%Y-%m-%d %a %H:%M:%S"),
+        sep(),
     ]
     return widgets
 
@@ -267,7 +273,7 @@ def bottom_bar_widgets():
 def init_screens():
     return [
         Screen(
-            wallpaper=os.path.join(qtile_path, "media", "triangle.jpg"),
+            wallpaper=os.path.join(qtile_path, "assets", "triangle.jpg"),
             wallpaper_mode="stretch",
             top=bar.Bar(widgets=top_bar_widgets(), size=24),
             bottom=bar.Bar(widgets=bottom_bar_widgets(), size=24),
