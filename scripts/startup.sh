@@ -12,6 +12,6 @@ pkill volumeicon
 greenclip daemon &
 nm-applet &
 xfce4-power-manager &
-sxhkd -c ~/.config/qtile/sxhkd/sxhkdrc &
+sxhkd -c "$HOME/.config/qtile/sxhkd/sxhkdrc" &
 dunst &
 volumeicon &

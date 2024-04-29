@@ -18,19 +18,22 @@ from libqtile.config import (
 
 locale.setlocale(locale.LC_TIME, "en_US")
 
-colors = [
-    ["#160B00", "#160B00"],  # background (dark grey) [0]
-    ["#663300", "#663300"],  # darkorange [1]
-    ["#8B4500", "#8B4500"],  # less dark orange (white) [2]
-    ["#A35100", "#A35100"],  # less less dark orange [3]
-    ["#C26100", "#C26100"],  # light orange [4]
-    ["#E07000", "#E07000"],  # green [5]
-    ["#FF7F00", "#FF7F00"],  # orange [6]
-    ["#FF8E1F", "#FF8E1F"],  # pink [7]
-    ["#FF8E1F", "#FF8E1F"],  # purple [8]
-    ["#FF8E1F", "#FF8E1F"],  # red [9]
-    ["#FF8E1F", "#FF8E1F"],  # yellow [10]
-]
+from cs import ColorScheme
+
+colors = ColorScheme.Nord
+
+# colors = [
+#    ["#160B00", "#160B00"],  # background (dark grey) [0]
+#    ["#663300", "#663300"],  # darkorange [1]
+#    ["#8B4500", "#8B4500"],  # less dark orange (white) [2]
+#    ["#A35100", "#A35100"],  # less less dark orange [3]
+#    ["#C26100", "#C26100"],  # light orange [4]
+#    ["#E07000", "#E07000"],  # green [5]
+#    ["#FF7F00", "#FF7F00"],  # orange [6]
+#    ["#FF8E1F", "#FF8E1F"],  # pink [7]
+#    ["#FF8E1F", "#FF8E1F"],  # purple [8]
+#    ["#FF8E1F", "#FF8E1F"],  # red [9]
+#    ["#FF8E1F", "#FF8E1F"],  # yellow [10]
 
 # backgroundColor = "#160B00"
 # foregroundColor = "#DE7B1B"
@@ -146,7 +149,25 @@ groups.append(
                 y=0.05,
                 x=0.05,
                 warp_pointer=True,
-            )
+            ),
+            DropDown(
+                "htop",
+                "alacritty -e htop",
+                height=0.9,
+                width=0.9,
+                y=0.05,
+                x=0.05,
+                warp_pointer=True,
+            ),
+            DropDown(
+                "calendar",
+                "alacritty -e cal",
+                height=0.9,
+                width=0.9,
+                y=0.05,
+                x=0.05,
+                warp_pointer=True,
+            ),
         ],
     )
 )
@@ -216,13 +237,18 @@ def top_bar_widgets():
         widget.Spacer(),
         widget.Battery(discharge_char="🔋", charge_char="🔌"),
         spacer(),
-        widget.Systray(),
+        widget.Systray(background="#282738"),
     ]
     return widgets
 
 
-def htop_handler(sort):
-    return {"Button1": lambda: qtile.cmd_spawn(myTerm + " -e htop --sort-key=" + sort)}
+def htop_handler():
+    return {"Button1": lazy.group["scratchpad"].dropdown_toggle("htop")}
+
+
+def icon_locator(IconName):
+    """Locate icon in resouce folder"""
+    return os.path.join(qtile_path, "assets", IconName)
 
 
 def bottom_bar_widgets():
@@ -230,17 +256,22 @@ def bottom_bar_widgets():
         # TODO: Mouse ony kill!
         # widget.LaunchBar(progs=[("X", "xkill")]),
         widget.LaunchBar(
-            progs=[("", "firefox"), ("Code", "code"), ("Audacious", "audacious -t")]
+            progs=[
+                (icon_locator("alacritty.png"), "alacritty"),
+                (icon_locator("firefox.png"), "firefox"),
+                (icon_locator("code.png"), "code"),
+                (icon_locator("audacious.png"), "audacious -t"),
+            ]
         ),
         widget.Spacer(),
         widget.CPU(
             format=" {load_percent}%",
             update_interval=10,
-            mouse_callbacks=htop_handler("PERCENT_CPU"),
+            mouse_callbacks=htop_handler(),
         ),
         widget.CPUGraph(
             frequency=5,
-            mouse_callbacks=htop_handler("PERCENT_CPU"),
+            mouse_callbacks=htop_handler(),
         ),
         spacer(),
         widget.Memory(
@@ -248,14 +279,19 @@ def bottom_bar_widgets():
             update_interval=10,
             measure_mem="G",
             padding=0,
-            mouse_callbacks=htop_handler("PERCENT_MEM"),
+            mouse_callbacks=htop_handler(),
         ),
         widget.MemoryGraph(
             frequency=5,
-            mouse_callbacks=htop_handler("PERCENT_MEM"),
+            mouse_callbacks=htop_handler(),
         ),
         spacer(),
-        widget.Clock(format="%Y-%m-%d %a %H:%M:%S"),
+        widget.Clock(
+            format="%Y-%m-%d %a %H:%M:%S",
+            mouse_callbacks={
+                "Button1": lazy.group["scratchpad"].dropdown_toggle("calendar")
+            },
+        ),
     ]
     return widgets
 
@@ -266,7 +302,7 @@ def init_screens():
             wallpaper=os.path.join(qtile_path, "assets", "triangle.jpg"),
             wallpaper_mode="stretch",
             top=bar.Bar(widgets=top_bar_widgets(), size=24),
-            bottom=bar.Bar(widgets=bottom_bar_widgets(), size=24),
+            bottom=bar.Bar(widgets=bottom_bar_widgets(), size=32),
         )
     ]
 
