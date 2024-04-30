@@ -1,6 +1,7 @@
 import os
 import subprocess
 import locale
+import webbrowser
 
 from libqtile import layout, bar, widget, hook, qtile
 from libqtile.lazy import lazy
@@ -16,7 +17,7 @@ from libqtile.config import (
     Match,
 )
 
-locale.setlocale(locale.LC_TIME, "en_US")
+locale.setlocale(locale.LC_TIME, "ru_UA")
 
 from cs import ColorScheme
 
@@ -109,10 +110,33 @@ keys = [
     EzKey("M-C-j", lazy.layout.shuffle_down()),
     EzKey("M-C-k", lazy.layout.shuffle_up()),
     # Grow windows
-    EzKey("M-S-h", lazy.layout.grow_left()),
-    EzKey("M-S-l", lazy.layout.grow_right()),
-    EzKey("M-S-j", lazy.layout.grow_down()),
-    EzKey("M-S-k", lazy.layout.grow_up()),
+    EzKey(
+        "M-S-h",
+        lazy.layout.grow_left(),
+        lazy.layout.shrink(),
+        lazy.layout.decrease_ratio(),
+        lazy.layout.add(),
+    ),
+    EzKey(
+        "M-S-l",
+        lazy.layout.grow_right(),
+        lazy.layout.grow(),
+        lazy.layout.increase_ratio(),
+        lazy.layout.delete(),
+    ),
+    EzKey(
+        "M-S-j",
+        lazy.layout.grow_down(),
+        lazy.layout.shrink(),
+        lazy.layout.increase_nmaster(),
+    ),
+    EzKey(
+        "M-S-k",
+        lazy.layout.grow_up(),
+        lazy.layout.grow(),
+        lazy.layout.decrease_nmaster(),
+    ),
+    # Reset layout
     EzKey("M-S-n", lazy.layout.reset()),
     # Flip windows
     EzKey("M-A-h", lazy.layout.flip_left()),
@@ -143,7 +167,7 @@ groups.append(
         [
             DropDown(
                 "term",
-                "alacritty",
+                "alacritty -e tmux new-session -A -s 'scratchpad'",
                 height=0.9,
                 width=0.9,
                 y=0.05,
@@ -151,8 +175,26 @@ groups.append(
                 warp_pointer=True,
             ),
             DropDown(
-                "htop",
-                "alacritty -e htop",
+                "htop_mem",
+                "alacritty -e htop --sort-key=PERCENT_MEM",
+                height=0.9,
+                width=0.9,
+                y=0.05,
+                x=0.05,
+                warp_pointer=True,
+            ),
+            DropDown(
+                "htop_cpu",
+                "alacritty -e htop --sort-key=PERCENT_CPU",
+                height=0.9,
+                width=0.9,
+                y=0.05,
+                x=0.05,
+                warp_pointer=True,
+            ),
+            DropDown(
+                "mtr",
+                "alacritty -e mtr --displaymode 1 8.8.8.8",
                 height=0.9,
                 width=0.9,
                 y=0.05,
@@ -221,29 +263,19 @@ def sep():
 
 
 def spacer():
-    return widget.Spacer(length=30)
+    return widget.Spacer(length=15)
 
 
-def top_bar_widgets():
-    widgets = [
-        widget.GroupBox(highlight_method="block"),
-        spacer(),
-        widget.CurrentLayoutIcon(),
-        # widget.CurrentLayout(),
-        spacer(),
-        # widget.CurrentLayoutIcon(),
-        # widget.PulseVolume(),
-        widget.WindowName(),
-        widget.Spacer(),
-        widget.Battery(discharge_char="🔋", charge_char="🔌"),
-        spacer(),
-        widget.Systray(background="#282738"),
-    ]
-    return widgets
+def htop_cpu_handler():
+    return {"Button1": lazy.group["scratchpad"].dropdown_toggle("htop_cpu")}
 
 
-def htop_handler():
-    return {"Button1": lazy.group["scratchpad"].dropdown_toggle("htop")}
+def htop_mem_handler():
+    return {"Button1": lazy.group["scratchpad"].dropdown_toggle("htop_mem")}
+
+
+def mtr_handler():
+    return {"Button1": lazy.group["scratchpad"].dropdown_toggle("mtr")}
 
 
 def icon_locator(IconName):
@@ -251,10 +283,55 @@ def icon_locator(IconName):
     return os.path.join(qtile_path, "assets", IconName)
 
 
+def top_bar_widgets():
+    widgets = [
+        widget.GroupBox(highlight_method="block"),
+        spacer(),
+        widget.CurrentLayoutIcon(),
+        spacer(),
+        widget.WindowName(),
+        spacer(),
+        widget.Wttr(
+            location={
+                "kharkiv": "kharkiv",
+            },
+            format="%c %t %h",
+            font="Hack Nerd Font",
+            background="#383748",
+            mouse_callbacks={
+                "Button1": lambda: webbrowser.open(
+                    "https://sinoptik.ua/%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0-%D0%BB%D1%8E%D0%B1%D0%BE%D1%82%D0%B8%D0%BD"
+                )
+            },
+        ),
+        spacer(),
+        widget.Clock(
+            # TODO: Copy date-time to clipboard on click
+            format="%Y-%m-%d %a %H:%M",
+            background="#383748",
+        ),
+    ]
+    return widgets
+
+
+# lazy.spawn(f'notify-send -a "{source}" "{title}" "{message}"')
+
+
 def bottom_bar_widgets():
     widgets = [
-        # TODO: Mouse ony kill!
-        # widget.LaunchBar(progs=[("X", "xkill")]),
+        widget.TextBox(
+            "XKill",
+            # mouse_callbacks={"Button1": lazy.spawn("xkill")},
+            mouse_callbacks={"Button1": lazy.spawn("xkill&")},
+        ),
+        # widget.TextBox(
+        #    "Kill",
+        #    mouse_callbacks={
+        #        "Button1": lambda: subprocess.run(
+        #            "sh -e 'echo qwe | sudo -S systemctl restart NetworkManager.service'"
+        #        )
+        #    },
+        # ),
         widget.LaunchBar(
             progs=[
                 (icon_locator("alacritty.png"), "alacritty"),
@@ -267,11 +344,13 @@ def bottom_bar_widgets():
         widget.CPU(
             format=" {load_percent}%",
             update_interval=10,
-            mouse_callbacks=htop_handler(),
+            mouse_callbacks=htop_cpu_handler(),
+            background="#383748",
         ),
         widget.CPUGraph(
             frequency=5,
-            mouse_callbacks=htop_handler(),
+            mouse_callbacks=htop_cpu_handler(),
+            background="#383748",
         ),
         spacer(),
         widget.Memory(
@@ -279,18 +358,28 @@ def bottom_bar_widgets():
             update_interval=10,
             measure_mem="G",
             padding=0,
-            mouse_callbacks=htop_handler(),
+            mouse_callbacks=htop_mem_handler(),
+            background="#383748",
         ),
         widget.MemoryGraph(
             frequency=5,
-            mouse_callbacks=htop_handler(),
+            mouse_callbacks=htop_mem_handler(),
+            background="#383748",
         ),
         spacer(),
-        widget.Clock(
-            format="%Y-%m-%d %a %H:%M:%S",
-            mouse_callbacks={
-                "Button1": lazy.group["scratchpad"].dropdown_toggle("calendar")
-            },
+        widget.Net(
+            interface="wlp3s0",
+            prefix="M",
+            mouse_callbacks=mtr_handler(),
+            background="#383748",
+        ),
+        widget.NetGraph(
+            background="#383748",
+        ),
+        spacer(),
+        widget.Systray(
+            background="#383748",
+            padding=5,
         ),
     ]
     return widgets
@@ -302,7 +391,7 @@ def init_screens():
             wallpaper=os.path.join(qtile_path, "assets", "triangle.jpg"),
             wallpaper_mode="stretch",
             top=bar.Bar(widgets=top_bar_widgets(), size=24),
-            bottom=bar.Bar(widgets=bottom_bar_widgets(), size=32),
+            bottom=bar.Bar(widgets=bottom_bar_widgets(), size=24),
         )
     ]
 
