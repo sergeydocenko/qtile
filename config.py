@@ -53,7 +53,10 @@ focus_on_window_activation = "smart"
 wmname = "LG3D"
 mod = "mod4"
 
-myTerm = "alacritty"
+
+class Env:
+    Wlan = "wlp3s0"
+
 
 modifier_keys = {
     "M": "mod4",
@@ -244,15 +247,14 @@ layouts = [
         single_margin=0,
     ),
     layout.Tile(**layout_theme),
-    # layout.Bsp(**layout_theme),
     layout.Max(),
 ]
 
 widget_defaults = dict(
     font="Source Code Pro",
-    # fontsize=16,
     fontsize=20,
     padding=3,
+    background="#0d1421",
 )
 
 extension_defaults = widget_defaults.copy()
@@ -297,7 +299,6 @@ def top_bar_widgets():
             },
             format="%c %t %h",
             font="Hack Nerd Font",
-            background="#383748",
             mouse_callbacks={
                 "Button1": lambda: webbrowser.open(
                     "https://sinoptik.ua/%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0-%D0%BB%D1%8E%D0%B1%D0%BE%D1%82%D0%B8%D0%BD"
@@ -308,30 +309,17 @@ def top_bar_widgets():
         widget.Clock(
             # TODO: Copy date-time to clipboard on click
             format="%Y-%m-%d %a %H:%M",
-            background="#383748",
         ),
     ]
     return widgets
-
-
-# lazy.spawn(f'notify-send -a "{source}" "{title}" "{message}"')
 
 
 def bottom_bar_widgets():
     widgets = [
         widget.TextBox(
             "XKill",
-            # mouse_callbacks={"Button1": lazy.spawn("xkill")},
             mouse_callbacks={"Button1": lazy.spawn("xkill&")},
         ),
-        # widget.TextBox(
-        #    "Kill",
-        #    mouse_callbacks={
-        #        "Button1": lambda: subprocess.run(
-        #            "sh -e 'echo qwe | sudo -S systemctl restart NetworkManager.service'"
-        #        )
-        #    },
-        # ),
         widget.LaunchBar(
             progs=[
                 (icon_locator("alacritty.png"), "alacritty"),
@@ -345,12 +333,10 @@ def bottom_bar_widgets():
             format=" {load_percent}%",
             update_interval=10,
             mouse_callbacks=htop_cpu_handler(),
-            background="#383748",
         ),
         widget.CPUGraph(
             frequency=5,
             mouse_callbacks=htop_cpu_handler(),
-            background="#383748",
         ),
         spacer(),
         widget.Memory(
@@ -359,28 +345,27 @@ def bottom_bar_widgets():
             measure_mem="G",
             padding=0,
             mouse_callbacks=htop_mem_handler(),
-            background="#383748",
         ),
         widget.MemoryGraph(
             frequency=5,
             mouse_callbacks=htop_mem_handler(),
-            background="#383748",
         ),
         spacer(),
         widget.Net(
-            interface="wlp3s0",
+            interface=Env.Wlan,
             prefix="M",
             format="↓{down:.3f}{down_suffix} ↑{up:.3f}{up_suffix}",
             mouse_callbacks=mtr_handler(),
-            background="#383748",
         ),
         widget.NetGraph(
-            background="#383748",
+            mouse_callbacks=mtr_handler(),
+        ),
+        widget.Wlan(
+            interface=Env.Wlan,
             mouse_callbacks=mtr_handler(),
         ),
         spacer(),
         widget.Systray(
-            background="#383748",
             padding=5,
         ),
     ]
