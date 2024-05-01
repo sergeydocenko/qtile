@@ -112,6 +112,7 @@ keys = [
     EzKey("M-C-l", lazy.layout.shuffle_right()),
     EzKey("M-C-j", lazy.layout.shuffle_down()),
     EzKey("M-C-k", lazy.layout.shuffle_up()),
+    EzKey("M-C-m", lazy.layout.swap_main()),
     # Grow windows
     EzKey(
         "M-S-h",
@@ -233,7 +234,7 @@ mouse = [
 ]
 
 layout_theme = {
-    "border_width": 2,
+    "border_width": 3,
     "margin": 10,
     "border_focus": "#cc241d",
     "border_normal": "#555555",
@@ -318,7 +319,7 @@ def bottom_bar_widgets():
     widgets = [
         widget.TextBox(
             "XKill",
-            mouse_callbacks={"Button1": lazy.spawn("xkill&")},
+            mouse_callbacks={"Button1": lazy.spawn("alacritty")},
         ),
         widget.LaunchBar(
             progs=[
