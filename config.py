@@ -370,11 +370,13 @@ def bottom_bar_widgets():
         widget.Net(
             interface="wlp3s0",
             prefix="M",
+            format="↓{down:.3f}{down_suffix} ↑{up:.3f}{up_suffix}",
             mouse_callbacks=mtr_handler(),
             background="#383748",
         ),
         widget.NetGraph(
             background="#383748",
+            mouse_callbacks=mtr_handler(),
         ),
         spacer(),
         widget.Systray(
