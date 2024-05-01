@@ -361,8 +361,7 @@ def bottom_bar_widgets():
             mouse_callbacks=mtr_handler(),
         ),
         widget.Wlan(
-            interface=Env.Wlan,
-            mouse_callbacks=mtr_handler(),
+            interface=Env.Wlan, mouse_callbacks=mtr_handler(), format="{percent:2.0%}"
         ),
         spacer(),
         widget.Systray(
