@@ -6,6 +6,7 @@ import webbrowser
 from libqtile import layout, bar, widget, hook, qtile
 from libqtile.lazy import lazy
 from libqtile.config import (
+    Click,
     EzClick,
     EzDrag,
     EzKey,
@@ -16,30 +17,9 @@ from libqtile.config import (
     DropDown,
     Match,
 )
-
-locale.setlocale(locale.LC_TIME, "ru_UA")
-
 from cs import ColorScheme
 
-colors = ColorScheme.Nord
-
-# colors = [
-#    ["#160B00", "#160B00"],  # background (dark grey) [0]
-#    ["#663300", "#663300"],  # darkorange [1]
-#    ["#8B4500", "#8B4500"],  # less dark orange (white) [2]
-#    ["#A35100", "#A35100"],  # less less dark orange [3]
-#    ["#C26100", "#C26100"],  # light orange [4]
-#    ["#E07000", "#E07000"],  # green [5]
-#    ["#FF7F00", "#FF7F00"],  # orange [6]
-#    ["#FF8E1F", "#FF8E1F"],  # pink [7]
-#    ["#FF8E1F", "#FF8E1F"],  # purple [8]
-#    ["#FF8E1F", "#FF8E1F"],  # red [9]
-#    ["#FF8E1F", "#FF8E1F"],  # yellow [10]
-
-# backgroundColor = "#160B00"
-# foregroundColor = "#DE7B1B"
-# workspaceColor = "#DE7B1B"
-# foregroundColorTwo = "#DE7B1B"
+locale.setlocale(locale.LC_TIME, "ru_UA")
 
 qtile_path = os.path.join(os.path.expanduser("~"), ".config", "qtile")
 
@@ -52,6 +32,8 @@ auto_minimize = True
 focus_on_window_activation = "smart"
 wmname = "LG3D"
 mod = "mod4"
+
+colors = ColorScheme.Nord
 
 
 class Env:
@@ -73,21 +55,9 @@ def Notfy(source, title, message):
 
 @lazy.function
 def kill_other_windows(qtile):
-    """Kills all windows in the current group except the focused one."""
-    current_window = qtile.currentWindow
-    if current_window is not None:
-        for window in qtile.currentGroup.windows:
-            if window != current_window:
-                window.kill()
-
-
-@lazy.function
-def kill_other_windows_in_group(qtile):
-    Notfy("Pizda", "dfgs", "asdfasfd")
-    focused_win_id = qtile.currentWindow
-    group_name = qtile.current_group.name
-    for window in qtile.windows_map[group_name]:
-        if window != focused_win_id:
+    group = qtile.current_group
+    for window in group.windows[:]:
+        if window != group.current_window:
             window.kill()
 
 
@@ -98,8 +68,7 @@ keys = [
     EzKey("C-A-x", lazy.shutdown()),
     EzKey("C-A-c", lazy.reload_config()),
     EzKey("M-x", lazy.window.kill()),
-    EzKey("M-d", kill_other_windows_in_group()),  # TODO: implement!!!
-    # EzKey("M-r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
+    EzKey("M-S-x", kill_other_windows()),
     EzKey("M-<bracketleft>", lazy.prev_layout()),
     EzKey("M-<bracketright>", lazy.next_layout()),
     # Switch between windows
@@ -152,6 +121,20 @@ keys = [
     EzKey("M-z", lazy.window.toggle_fullscreen(), desc="Zoom window"),
     EzKey("M-f", lazy.window.toggle_floating()),
     EzKey("M-<Tab>", lazy.screen.toggle_group(), desc="Last active group"),
+    # Sratchpad
+    EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("term")),
+]
+
+# Mouse settings
+mouse = [
+    EzDrag(
+        "M-<Button1>",
+        lazy.window.set_position_floating(),
+        start=lazy.window.get_position(),
+    ),
+    EzDrag(
+        "M-<Button3>", lazy.window.set_size_floating(), start=lazy.window.get_size()
+    ),
 ]
 
 # Create groups
@@ -218,20 +201,6 @@ groups.append(
     )
 )
 
-keys.extend([EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("term"))])
-
-# Mouse settings
-mouse = [
-    EzDrag(
-        "M-<Button1>",
-        lazy.window.set_position_floating(),
-        start=lazy.window.get_position(),
-    ),
-    EzDrag(
-        "M-<Button3>", lazy.window.set_size_floating(), start=lazy.window.get_size()
-    ),
-    EzClick("M-<Button2>", lazy.window.bring_to_front()),
-]
 
 layout_theme = {
     "border_width": 3,
@@ -248,6 +217,7 @@ layouts = [
         single_margin=0,
     ),
     layout.Tile(**layout_theme),
+    layout.Bsp(**layout_theme),
     layout.Max(),
 ]
 
@@ -308,7 +278,8 @@ def top_bar_widgets():
         ),
         spacer(),
         widget.Clock(
-            # TODO: Copy date-time to clipboard on click
+            # TODO: Copy date-time to clipboard on click or
+            # TODO: Toggle date/time format on click
             format="%Y-%m-%d %a %H:%M",
         ),
     ]
@@ -318,54 +289,74 @@ def top_bar_widgets():
 def bottom_bar_widgets():
     widgets = [
         widget.TextBox(
-            "XKill",
-            mouse_callbacks={"Button1": lazy.spawn("alacritty")},
+            text="X",
+            mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("xkill")},
+        ),
+        widget.TextBox(
+            "[x]",
+            mouse_callbacks={
+                # "Button1": lambda: qtile.cmd_spawn("kitty --start-as minimized xkill")
+                "Button1": lambda: lazy.spawn(
+                    # "/usr/bin/mplayer $HOME/media/chime/chime.mp3"
+                    firefox
+                )
+            },
         ),
         widget.LaunchBar(
             progs=[
                 (icon_locator("alacritty.png"), "alacritty"),
                 (icon_locator("firefox.png"), "firefox"),
                 (icon_locator("code.png"), "code"),
+                (icon_locator("obsidian.png"), "obsidian"),
                 (icon_locator("audacious.png"), "audacious -t"),
             ]
         ),
         widget.Spacer(),
-        widget.CPU(
-            format=" {load_percent}%",
-            update_interval=10,
-            mouse_callbacks=htop_cpu_handler(),
-        ),
-        widget.CPUGraph(
-            frequency=5,
-            mouse_callbacks=htop_cpu_handler(),
-        ),
-        spacer(),
-        widget.Memory(
-            format="{MemUsed: .0f}{mm}",
-            update_interval=10,
-            measure_mem="G",
-            padding=0,
-            mouse_callbacks=htop_mem_handler(),
-        ),
-        widget.MemoryGraph(
-            frequency=5,
-            mouse_callbacks=htop_mem_handler(),
-        ),
-        spacer(),
-        widget.Net(
-            interface=Env.Wlan,
-            prefix="M",
-            format="↓{down:.3f}{down_suffix} ↑{up:.3f}{up_suffix}",
-            mouse_callbacks=mtr_handler(),
-        ),
-        widget.NetGraph(
-            mouse_callbacks=mtr_handler(),
-        ),
-        widget.Wlan(
-            interface=Env.Wlan, mouse_callbacks=mtr_handler(), format="{percent:2.0%}"
+        widget.WidgetBox(
+            text_closed="[HEALTH]",
+            text_opened="[>]",
+            widgets=[
+                widget.CPU(
+                    format=" {load_percent}%",
+                    update_interval=10,
+                    mouse_callbacks=htop_cpu_handler(),
+                ),
+                widget.CPUGraph(
+                    frequency=5,
+                    mouse_callbacks=htop_cpu_handler(),
+                ),
+                spacer(),
+                widget.Memory(
+                    format="{MemUsed: .0f}{mm}",
+                    update_interval=10,
+                    measure_mem="G",
+                    padding=0,
+                    mouse_callbacks=htop_mem_handler(),
+                ),
+                widget.MemoryGraph(
+                    frequency=5,
+                    mouse_callbacks=htop_mem_handler(),
+                ),
+                spacer(),
+                widget.Net(
+                    interface=Env.Wlan,
+                    prefix="M",
+                    format="↓{down:.3f}{down_suffix} ↑{up:.3f}{up_suffix}",
+                    mouse_callbacks=mtr_handler(),
+                ),
+                widget.NetGraph(
+                    mouse_callbacks=mtr_handler(),
+                ),
+                widget.Wlan(
+                    interface=Env.Wlan,
+                    mouse_callbacks=mtr_handler(),
+                    format="{percent:2.0%}",
+                ),
+            ],
         ),
         spacer(),
         widget.Systray(
+            background="#383748",
             padding=5,
         ),
     ]
