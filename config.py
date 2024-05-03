@@ -290,7 +290,7 @@ def bottom_bar_widgets():
     widgets = [
         widget.TextBox(
             text="X",
-            mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("xkill")},
+            mouse_callbacks={"Button1": lambda: run_xkill()},
         ),
         widget.TextBox(
             "[x]",
@@ -325,6 +325,7 @@ def bottom_bar_widgets():
                     frequency=5,
                     mouse_callbacks=htop_cpu_handler(),
                 ),
+                widget.ThermalSensor(format="{temp:.0f}{unit}"),
                 spacer(),
                 widget.Memory(
                     format="{MemUsed: .0f}{mm}",
