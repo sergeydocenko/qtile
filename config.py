@@ -282,26 +282,13 @@ def top_bar_widgets():
             # TODO: Toggle date/time format on click
             format="%Y-%m-%d %a %H:%M",
         ),
+        widget.TextBox("[x]", mouse_callbacks={"Button1": lazy.window.kill()}),
     ]
     return widgets
 
 
 def bottom_bar_widgets():
     widgets = [
-        widget.TextBox(
-            text="X",
-            mouse_callbacks={"Button1": lambda: run_xkill()},
-        ),
-        widget.TextBox(
-            "[x]",
-            mouse_callbacks={
-                # "Button1": lambda: qtile.cmd_spawn("kitty --start-as minimized xkill")
-                "Button1": lambda: lazy.spawn(
-                    # "/usr/bin/mplayer $HOME/media/chime/chime.mp3"
-                    firefox
-                )
-            },
-        ),
         widget.LaunchBar(
             progs=[
                 (icon_locator("alacritty.png"), "alacritty"),
