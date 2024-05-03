@@ -325,7 +325,7 @@ def bottom_bar_widgets():
                     frequency=5,
                     mouse_callbacks=htop_cpu_handler(),
                 ),
-                widget.ThermalSensor(format="{temp:.0f}{unit}"),
+                widget.ThermalSensor(format="{temp:.0f}{unit}", threshold=80),
                 spacer(),
                 widget.Memory(
                     format="{MemUsed: .0f}{mm}",
