@@ -315,6 +315,7 @@ def top_bar_widgets():
         widget.Clock(
             # TODO: Copy date-time to clipboard on click or
             # TODO: Toggle date/time format on click
+            background="#383748",
             format="%Y-%m-%d %a %H:%M",
         ),
         widget.TextBox("[x]", mouse_callbacks={"Button1": lazy.window.kill()}),
