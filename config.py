@@ -2,6 +2,7 @@ import os
 import subprocess
 import locale
 import webbrowser
+import re
 
 from libqtile import layout, bar, widget, hook, qtile
 from libqtile.lazy import lazy
@@ -12,6 +13,7 @@ from libqtile.config import (
     EzKey,
     Group,
     KeyChord,
+    Rule,
     Screen,
     ScratchPad,
     DropDown,
@@ -29,7 +31,7 @@ bring_front_click = False
 cursor_warp = False
 auto_fullscreen = True
 auto_minimize = True
-focus_on_window_activation = "smart"
+focus_on_window_activation = "focus"
 wmname = "LG3D"
 mod = "mod4"
 
@@ -61,6 +63,18 @@ def kill_other_windows(qtile):
             window.kill()
 
 
+@lazy.function
+def swap_group_with_next(qtile):
+    qtile.current_screen.group.next_window().cmd_toscreen()
+    qtile.current_screen.group.cmd_shuffle()
+
+
+@lazy.function
+def swap_group_with_prev(qtile):
+    qtile.current_screen.group.prev_window().cmd_toscreen()
+    qtile.current_screen.group.cmd_shuffle()
+
+
 # The keys will be here
 keys = [
     # Qtile WM Control
@@ -69,8 +83,12 @@ keys = [
     EzKey("C-A-c", lazy.reload_config()),
     EzKey("M-x", lazy.window.kill()),
     EzKey("M-S-x", kill_other_windows()),
-    EzKey("M-<bracketleft>", lazy.prev_layout()),
-    EzKey("M-<bracketright>", lazy.next_layout()),
+    EzKey("M-<bracketleft>", lazy.screen.prev_group()),
+    EzKey("M-<bracketright>", lazy.screen.next_group()),
+    # EzKey("M-C-<bracketleft>", swap_group_with_prev()),
+    # EzKey("M-C-<bracketright>", swap_group_with_next()),
+    # EzKey("M-<bracketleft>", lazy.prev_layout()),
+    # EzKey("M-<bracketright>", lazy.next_layout()),
     # Switch between windows
     EzKey("M-h", lazy.layout.left()),
     EzKey("M-l", lazy.layout.right()),
@@ -123,6 +141,7 @@ keys = [
     EzKey("M-<Tab>", lazy.screen.toggle_group(), desc="Last active group"),
     # Sratchpad
     EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("term")),
+    EzKey("M-<grave>", lazy.group["scratchpad"].dropdown_toggle("grave")),
 ]
 
 # Mouse settings
@@ -153,8 +172,17 @@ groups.append(
         "scratchpad",
         [
             DropDown(
+                "grave",
+                "alacritty -e tmux new-session -A -s 'grave'",
+                height=0.9,
+                width=0.9,
+                y=0.05,
+                x=0.05,
+                warp_pointer=True,
+            ),
+            DropDown(
                 "term",
-                "alacritty -e tmux new-session -A -s 'scratchpad'",
+                "alacritty -e tmux new-session -A -s 'scratch'",
                 height=0.9,
                 width=0.9,
                 y=0.05,
@@ -202,6 +230,12 @@ groups.append(
 )
 
 
+dgroups_app_rules = [
+    Rule(Match(wm_class=re.compile("^[Aa]udacious")), group="PLAYER"),
+    Rule(Match(wm_class=re.compile("[Navigator|firefox]")), group="1"),
+    Rule(Match(wm_class=re.compile("^code-oss")), group="2"),
+]
+
 layout_theme = {
     "border_width": 3,
     "margin": 10,
@@ -216,9 +250,10 @@ layouts = [
         single_border_width=0,
         single_margin=0,
     ),
-    layout.Tile(**layout_theme),
-    layout.Bsp(**layout_theme),
-    layout.Max(),
+    # layout.Columns(**layout_theme),
+    # layout.Tile(**layout_theme),
+    # layout.Bsp(**layout_theme),
+    layout.Max(**layout_theme),
 ]
 
 widget_defaults = dict(
