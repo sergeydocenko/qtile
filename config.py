@@ -1,18 +1,18 @@
+""" My Qtile Config """
+
 import os
 import subprocess
 import locale
 import webbrowser
+import dataclasses
 import re
 
-from libqtile import layout, bar, widget, hook, qtile
+from libqtile import layout, bar, widget, hook
 from libqtile.lazy import lazy
 from libqtile.config import (
-    Click,
-    EzClick,
     EzDrag,
     EzKey,
     Group,
-    KeyChord,
     Rule,
     Screen,
     ScratchPad,
@@ -38,7 +38,10 @@ mod = "mod4"
 colors = ColorScheme.Nord
 
 
+@dataclasses.dataclass
 class Env:
+    """Environment settings"""
+
     Wlan = "wlp3s0"
 
 
@@ -51,7 +54,8 @@ modifier_keys = {
 }
 
 
-def Notfy(source, title, message):
+def notfy(source, title, message):
+    """Send onscreen notification"""
     lazy.spawn(f'notify-send -a "{source}" "{title}" "{message}"')
 
 
@@ -82,7 +86,7 @@ keys = [
     EzKey("C-A-x", lazy.shutdown()),
     EzKey("C-A-c", lazy.reload_config()),
     EzKey("M-x", lazy.window.kill()),
-    EzKey("M-S-x", kill_other_windows()),
+    # EzKey("M-S-x", kill_other_windows()),
     EzKey("M-<bracketleft>", lazy.screen.prev_group()),
     EzKey("M-<bracketright>", lazy.screen.next_group()),
     # EzKey("M-C-<bracketleft>", swap_group_with_prev()),
@@ -267,35 +271,47 @@ extension_defaults = widget_defaults.copy()
 
 
 def sep():
+    """Predefined separator"""
     return widget.TextBox(text="•")
 
 
 def spacer():
+    """Predefined spacer"""
     return widget.Spacer(length=15)
 
 
 def htop_cpu_handler():
+    """Scratchpad with htop/cpu running"""
     return {"Button1": lazy.group["scratchpad"].dropdown_toggle("htop_cpu")}
 
 
 def htop_mem_handler():
-    return {"Button1": lazy.group["scratchpad"].dropdown_toggle("htop_mem")}
+    """Scratchpad with htop/mem running"""
+    return {"Button1": lazy.group["scrsatchpad"].dropdown_toggle("htop_mem")}
 
 
 def mtr_handler():
-    return {"Button1": lazy.group["scratchpad"].dropdown_toggle("mtr")}
+    """Scratchpad with mtr running"""
+    return {
+        "Button1": lazy.group["scratchpad"].dropdown_toggle("mtr"),
+        "Button3": lazy.spawn(
+            "echo qwe | sudo -e pkill NetworkManager && sleep 1s && sudo NetworkManager"
+        ),
+    }
 
 
-def icon_locator(IconName):
+def icon_locator(icon_name):
     """Locate icon in resouce folder"""
-    return os.path.join(qtile_path, "assets", IconName)
+    return os.path.join(qtile_path, "assets", icon_name)
 
 
 def top_bar_widgets():
+    """Create top bar widgets"""
     widgets = [
         widget.GroupBox(highlight_method="block"),
         spacer(),
         widget.CurrentLayoutIcon(),
+        # widget.CurrentLayout(fmt="{} "),
         spacer(),
         widget.WindowName(),
         spacer(),
@@ -306,17 +322,25 @@ def top_bar_widgets():
             format="%c %t %h",
             font="Hack Nerd Font",
             mouse_callbacks={
-                "Button1": lambda: webbrowser.open(
-                    "https://sinoptik.ua/%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0-%D0%BB%D1%8E%D0%B1%D0%BE%D1%82%D0%B8%D0%BD"
-                )
+                "Button1": lambda: webbrowser.open("https://sinoptik.ua/погода-люботин")
             },
         ),
         spacer(),
+        widget.WidgetBox(
+            text_closed="[•]",
+            text_opened="[>]",
+            # text_closed="[<]",
+            # text_opened="[>]",
+            widgets=[
+                widget.Clock(
+                    background="#383748",
+                    format="%Y-%m-%d %a",
+                ),
+            ],
+        ),
         widget.Clock(
-            # TODO: Copy date-time to clipboard on click or
-            # TODO: Toggle date/time format on click
             background="#383748",
-            format="%Y-%m-%d %a %H:%M",
+            format="%H:%M",
         ),
         widget.TextBox("[x]", mouse_callbacks={"Button1": lazy.window.kill()}),
     ]
@@ -324,6 +348,7 @@ def top_bar_widgets():
 
 
 def bottom_bar_widgets():
+    """Create bottom bar widgets"""
     widgets = [
         widget.LaunchBar(
             progs=[
@@ -388,6 +413,7 @@ def bottom_bar_widgets():
 
 
 def init_screens():
+    """Create screen layout"""
     return [
         Screen(
             wallpaper=os.path.join(qtile_path, "assets", "triangle.jpg"),
@@ -406,6 +432,7 @@ floating_types = ["notification", "toolbar", "splash", "dialog", "popup"]
 
 @hook.subscribe.client_new
 def set_floating(window):
+    """Automatically sets window floating attribute for certain windows type"""
     if (
         window.window.get_wm_transient_for()
         or window.window.get_wm_type() in floating_types
@@ -415,5 +442,6 @@ def set_floating(window):
 
 @hook.subscribe.startup
 def startup():
-    startup = os.path.expanduser("~/.config/qtile/scripts/startup.sh")
-    subprocess.call([startup])
+    """Autorun script"""
+    startup_script = os.path.expanduser("~/.config/qtile/scripts/startup.sh")
+    subprocess.call([startup_script])
