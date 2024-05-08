@@ -25,6 +25,7 @@ locale.setlocale(locale.LC_TIME, "ru_UA")
 
 qtile_path = os.path.join(os.path.expanduser("~"), ".config", "qtile")
 
+# pylint: disable=C0103
 main = None
 follow_mouse_focus = False
 bring_front_click = False
@@ -61,6 +62,7 @@ def notfy(source, title, message):
 
 @lazy.function
 def kill_other_windows(qtile):
+    """Kill's other windowds, except current one"""
     group = qtile.current_group
     for window in group.windows[:]:
         if window != group.current_window:
@@ -69,12 +71,14 @@ def kill_other_windows(qtile):
 
 @lazy.function
 def swap_group_with_next(qtile):
+    """Move currnet group forward"""
     qtile.current_screen.group.next_window().cmd_toscreen()
     qtile.current_screen.group.cmd_shuffle()
 
 
 @lazy.function
 def swap_group_with_prev(qtile):
+    """Move currnet group backward"""
     qtile.current_screen.group.prev_window().cmd_toscreen()
     qtile.current_screen.group.cmd_shuffle()
 
