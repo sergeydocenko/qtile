@@ -19,6 +19,9 @@ super + a
 super + ctrl + a
     firefox --private-window
 
+super + c
+    code
+
 Print
     flameshot gui
 
