@@ -162,73 +162,48 @@ for i in groups:
         ]
     )
 
+
+def CreateScratchpad(name, command):
+    """Create named scratchpad with command"""
+    return DropDown(
+        name,
+        command,
+        height=0.9,
+        width=0.9,
+        y=0.05,
+        x=0.05,
+        warp_pointer=True,
+    )
+
+
 # Scratchpads
 groups.append(
     ScratchPad(
         "scratchpad",
         [
-            DropDown(
+            CreateScratchpad(
                 "grave",
                 "alacritty -e tmux new-session -A -s 'grave'",
-                height=0.9,
-                width=0.9,
-                y=0.05,
-                x=0.05,
-                warp_pointer=True,
             ),
-            DropDown(
+            CreateScratchpad(
                 "term",
                 "alacritty -e tmux new-session -A -s 'scratch'",
-                height=0.9,
-                width=0.9,
-                y=0.05,
-                x=0.05,
-                warp_pointer=True,
             ),
-            DropDown(
+            CreateScratchpad(
                 "htop_mem",
                 "alacritty -e htop --sort-key=PERCENT_MEM",
-                height=0.9,
-                width=0.9,
-                y=0.05,
-                x=0.05,
-                warp_pointer=True,
             ),
-            DropDown(
+            CreateScratchpad(
                 "htop_cpu",
                 "alacritty -e htop --sort-key=PERCENT_CPU",
-                height=0.9,
-                width=0.9,
-                y=0.05,
-                x=0.05,
-                warp_pointer=True,
             ),
-            DropDown(
+            CreateScratchpad(
                 "mtr",
                 "alacritty -e mtr --displaymode 1 8.8.8.8",
-                height=0.9,
-                width=0.9,
-                y=0.05,
-                x=0.05,
-                warp_pointer=True,
             ),
-            DropDown(
+            CreateScratchpad(
                 "wavemon",
                 "alacritty -e wavemon",
-                height=0.9,
-                width=0.9,
-                y=0.05,
-                x=0.05,
-                warp_pointer=True,
-            ),
-            DropDown(
-                "calendar",
-                "alacritty -e cal",
-                height=0.9,
-                width=0.9,
-                y=0.05,
-                x=0.05,
-                warp_pointer=True,
             ),
         ],
     )
