@@ -7,6 +7,8 @@ import webbrowser
 import dataclasses
 import re
 
+from typing import List
+
 from libqtile import layout, bar, widget, hook
 from libqtile.lazy import lazy
 from libqtile.config import (
@@ -61,26 +63,13 @@ def notfy(source, title, message):
 
 
 @lazy.function
-def kill_other_windows(qtile):
-    """Kill's other windowds, except current one"""
-    group = qtile.current_group
-    for window in group.windows[:]:
-        if window != group.current_window:
+def close_other_windows(qtile: "qtile.core.Qtile") -> None:
+    """Closes all windows in the current group except the focused one."""
+    current_window = qtile.currentWindow
+    for window in qtile.currentGroup.windows:
+        if window.w_id != current_window.w_id:
+            print(f"Closing window with ID: {window.w_id}")
             window.kill()
-
-
-@lazy.function
-def swap_group_with_next(qtile):
-    """Move currnet group forward"""
-    qtile.current_screen.group.next_window().cmd_toscreen()
-    qtile.current_screen.group.cmd_shuffle()
-
-
-@lazy.function
-def swap_group_with_prev(qtile):
-    """Move currnet group backward"""
-    qtile.current_screen.group.prev_window().cmd_toscreen()
-    qtile.current_screen.group.cmd_shuffle()
 
 
 # The keys will be here
@@ -90,13 +79,12 @@ keys = [
     EzKey("C-A-x", lazy.shutdown()),
     EzKey("C-A-c", lazy.reload_config()),
     EzKey("M-x", lazy.window.kill()),
-    # EzKey("M-S-x", kill_other_windows()),
+    # EzKey("M-q", lambda qtile: close_other_windows(qtile)),
+    #
     EzKey("M-<bracketleft>", lazy.screen.prev_group()),
     EzKey("M-<bracketright>", lazy.screen.next_group()),
-    # EzKey("M-C-<bracketleft>", swap_group_with_prev()),
-    # EzKey("M-C-<bracketright>", swap_group_with_next()),
-    # EzKey("M-<bracketleft>", lazy.prev_layout()),
-    # EzKey("M-<bracketright>", lazy.next_layout()),
+    EzKey("M-C-<bracketleft>", lazy.layout.swap_group(reverse=True)),
+    EzKey("M-C-<bracketright>", lazy.layout.swap_group()),
     # Switch between windows
     EzKey("M-h", lazy.layout.left()),
     EzKey("M-l", lazy.layout.right()),
@@ -225,6 +213,15 @@ groups.append(
                 warp_pointer=True,
             ),
             DropDown(
+                "wavemon",
+                "alacritty -e wavemon",
+                height=0.9,
+                width=0.9,
+                y=0.05,
+                x=0.05,
+                warp_pointer=True,
+            ),
+            DropDown(
                 "calendar",
                 "alacritty -e cal",
                 height=0.9,
@@ -240,7 +237,7 @@ groups.append(
 
 dgroups_app_rules = [
     Rule(Match(wm_class=re.compile("^[Aa]udacious")), group="PLAYER"),
-    Rule(Match(wm_class=re.compile("[Navigator|firefox]")), group="1"),
+    # Rule(Match(wm_class=re.compile("[Navigator|firefox]")), group="1"),
     Rule(Match(wm_class=re.compile("^code-oss")), group="2"),
 ]
 
@@ -281,7 +278,7 @@ def sep():
 
 def spacer():
     """Predefined spacer"""
-    return widget.Spacer(length=15)
+    return widget.Spacer(length=10)
 
 
 def htop_cpu_handler():
@@ -291,7 +288,12 @@ def htop_cpu_handler():
 
 def htop_mem_handler():
     """Scratchpad with htop/mem running"""
-    return {"Button1": lazy.group["scrsatchpad"].dropdown_toggle("htop_mem")}
+    return {"Button1": lazy.group["scratchpad"].dropdown_toggle("htop_mem")}
+
+
+def wavemon_handler():
+    """Scratchpad with htop/mem running"""
+    return {"Button1": lazy.group["scratchpad"].dropdown_toggle("wavemon")}
 
 
 def mtr_handler():
@@ -333,8 +335,6 @@ def top_bar_widgets():
         widget.WidgetBox(
             text_closed="[•]",
             text_opened="[>]",
-            # text_closed="[<]",
-            # text_opened="[>]",
             widgets=[
                 widget.Clock(
                     background="#383748",
@@ -342,10 +342,12 @@ def top_bar_widgets():
                 ),
             ],
         ),
+        spacer(),
         widget.Clock(
             background="#383748",
             format="%H:%M",
         ),
+        spacer(),
         widget.TextBox("[x]", mouse_callbacks={"Button1": lazy.window.kill()}),
     ]
     return widgets
@@ -365,7 +367,8 @@ def bottom_bar_widgets():
         ),
         widget.Spacer(),
         widget.WidgetBox(
-            text_closed="[HEALTH]",
+            text_closed="[•]",
+            # text_closed="[HEALTH]",
             text_opened="[>]",
             widgets=[
                 widget.CPU(
@@ -402,7 +405,7 @@ def bottom_bar_widgets():
                 ),
                 widget.Wlan(
                     interface=Env.Wlan,
-                    mouse_callbacks=mtr_handler(),
+                    mouse_callbacks=wavemon_handler(),
                     format="{percent:2.0%}",
                 ),
             ],
