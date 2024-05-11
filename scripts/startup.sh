@@ -12,7 +12,9 @@ pkill volumeicon
 greenclip daemon &
 nm-applet &
 xfce4-power-manager &
-sxhkd -c "$HOME/.config/qtile/sxhkd/sxhkdrc" &
+#sxhkd -c "$HOME/.config/qtile/sxhkd/sxhkdrc" &
+sxhkd -c "/home/bams/.config/qtile/sxhkd/sxhkdrc" &
 dunst &
 volumeicon &
+
 setxkbmap -layout "us,ru" -option "grp:caps_toggle,grp_led:caps"
