@@ -1,3 +1,19 @@
+super + p; o
+    notify-send "Power" "Shutdown";\
+    sleep 3s;\
+    systemctl poweroff
+
+super + p; r
+    notify-send "Power" "Reboot";\
+    sleep 3s;\
+    systemctl reboot
+
+super + p; s
+    notify-send "Power" "DPMS Off";\
+    sleep 3s;\
+    xset dpms force off
+
+
 super + Return
     alacritty --config-file ~/.config/qtile/alacritty/alacritty.toml
         
@@ -13,18 +29,18 @@ super + w
 super + v
     rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 
-super + a
+super + b
     firefox
 
-super + ctrl + a
+super + shift + b
     firefox --private-window
 
-super + c
-    code
-
-Print
-    flameshot gui
-
+#super + c
+#    code
+#
+#Print
+#    flameshot gui
+#
 super + g; t
     notify-send -a "SXHKD" "Game" "Let's play Terraria"; \
     TERM=XTERM ~/games/terraria/game/Terraria.bin.x86_64
@@ -35,6 +51,3 @@ super + t; r
 
 super + BackSpace
     notify-send -a "SXHKD" "Power" "DPMS Off"; sleep 3s; xset dpms force off
-
-button2
-    alacritty
