@@ -7,8 +7,6 @@ import webbrowser
 import dataclasses
 import re
 
-from typing import List
-
 from libqtile import layout, bar, widget, hook
 from libqtile.lazy import lazy
 from libqtile.config import (
@@ -62,13 +60,11 @@ def notfy(source, title, message):
     lazy.spawn(f'notify-send -a "{source}" "{title}" "{message}"')
 
 
-@lazy.function
-def close_other_windows(qtile: "qtile.core.Qtile") -> None:
-    """Closes all windows in the current group except the focused one."""
-    current_window = qtile.currentWindow
-    for window in qtile.currentGroup.windows:
-        if window.w_id != current_window.w_id:
-            print(f"Closing window with ID: {window.w_id}")
+def kill_other_windows(qtile):
+    """Kills all windows in the current group except the focused one."""
+    group = qtile.current_group
+    for window in group.windows:
+        if window != qtile.current_window:
             window.kill()
 
 
@@ -78,8 +74,9 @@ keys = [
     EzKey("C-A-r", lazy.restart()),
     EzKey("C-A-x", lazy.shutdown()),
     EzKey("C-A-c", lazy.reload_config()),
+    # Close windows
     EzKey("M-x", lazy.window.kill()),
-    # EzKey("M-q", lambda qtile: close_other_windows(qtile)),
+    EzKey("M-S-x", lazy.function(kill_other_windows)),
     #
     EzKey("M-<bracketleft>", lazy.screen.prev_group()),
     EzKey("M-<bracketright>", lazy.screen.next_group()),
