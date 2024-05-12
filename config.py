@@ -82,6 +82,8 @@ keys = [
     EzKey("M-<bracketright>", lazy.screen.next_group()),
     EzKey("M-S-<bracketleft>", lazy.prev_layout()),
     EzKey("M-S-<bracketright>", lazy.next_layout()),
+    # Flip
+    EzKey("M-f", lazy.layout.flip()),
     # Switch between windows
     EzKey("M-h", lazy.layout.left()),
     EzKey("M-l", lazy.layout.right()),
@@ -130,7 +132,7 @@ keys = [
     # Additional control
     EzKey("M-n", lazy.layout.normalize()),
     EzKey("M-z", lazy.window.toggle_fullscreen(), desc="Zoom window"),
-    EzKey("M-f", lazy.window.toggle_floating()),
+    # EzKey("M-f", lazy.window.toggle_floating()),
     EzKey("M-<Tab>", lazy.screen.toggle_group(), desc="Last active group"),
     # Sratchpad
     EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("term")),
