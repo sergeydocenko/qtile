@@ -1,3 +1,7 @@
+###############################################################################
+# Power management
+###############################################################################
+ 
 super + p; o
     notify-send "Power" "Shutdown";\
     sleep 3s;\
@@ -13,10 +17,22 @@ super + p; s
     sleep 3s;\
     xset dpms force off
 
+super + BackSpace
+    notify-send -a "SXHKD" "Power" "DPMS Off"; sleep 3s; xset dpms force off
+
+
+###############################################################################
+# Terminal
+###############################################################################
 
 super + Return
     alacritty --config-file ~/.config/qtile/alacritty/alacritty.toml
         
+
+###############################################################################
+# Rofi launchers
+###############################################################################
+
 super + space
     rofi -show drun -show-icons
 
@@ -29,25 +45,45 @@ super + w
 super + v
     rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 
+
+###############################################################################
+# Web
+###############################################################################
+
 super + b
     firefox
 
 super + shift + b
     firefox --private-window
 
-#super + c
-#    code
-#
-#Print
-#    flameshot gui
-#
-super + g; t
-    notify-send -a "SXHKD" "Game" "Let's play Terraria"; \
-    TERM=XTERM ~/games/terraria/game/Terraria.bin.x86_64
+
+###############################################################################
+# Tools
+###############################################################################
 
 super + t; r
     { notify-send -a "SXHKD" "Redshift" "On"; redshift -O 5000, \
       notify-send -a "SXHKD" "Redshift" "Off"; redshift -x }
 
-super + BackSpace
-    notify-send -a "SXHKD" "Power" "DPMS Off"; sleep 3s; xset dpms force off
+
+Print
+    flameshot gui
+
+
+###############################################################################
+# Games
+###############################################################################
+
+super + g; t
+    notify-send -a "SXHKD" "Game" "Let's play Terraria"; \
+    TERM=XTERM ~/games/terraria/game/Terraria.bin.x86_64
+
+
+###############################################################################
+# Dev
+###############################################################################
+
+super + c
+    code
+
+
