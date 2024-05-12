@@ -80,8 +80,8 @@ keys = [
     #
     EzKey("M-<bracketleft>", lazy.screen.prev_group()),
     EzKey("M-<bracketright>", lazy.screen.next_group()),
-    EzKey("M-C-<bracketleft>", lazy.layout.swap_group(reverse=True)),
-    EzKey("M-C-<bracketright>", lazy.layout.swap_group()),
+    EzKey("M-S-<bracketleft>", lazy.prev_layout()),
+    EzKey("M-S-<bracketright>", lazy.next_layout()),
     # Switch between windows
     EzKey("M-h", lazy.layout.left()),
     EzKey("M-l", lazy.layout.right()),
@@ -226,6 +226,9 @@ layouts = [
         new_client_position="bottom",
         single_border_width=0,
         single_margin=0,
+    ),
+    layout.MonadWide(
+        **layout_theme,
     ),
     # layout.Columns(**layout_theme),
     # layout.Tile(**layout_theme),
