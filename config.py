@@ -216,9 +216,9 @@ dgroups_app_rules = [
 ]
 
 layout_theme = {
-    "border_width": 3,
-    "margin": 10,
-    "border_focus": "#cc241d",
+    "border_width": 5,
+    "margin": 5,
+    "border_focus": "#bf8b00",
     "border_normal": "#555555",
 }
 
@@ -237,6 +237,8 @@ layouts = [
     # layout.Bsp(**layout_theme),
     layout.Max(**layout_theme),
 ]
+
+floating_layout = layout.Floating(**layout_theme)
 
 widget_defaults = dict(
     font="Source Code Pro",
