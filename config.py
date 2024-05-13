@@ -68,6 +68,13 @@ def kill_other_windows(qtile):
             window.kill()
 
 
+def switch_to_urgent_group(qtile):
+    """Switch to group fhere application set urgency flag"""
+    for group in qtile.groups:
+        if any(w.urgent for w in group.windows):
+            group.cmd_toscreen()
+
+
 # The keys will be here
 keys = [
     # Qtile WM Control
@@ -137,6 +144,7 @@ keys = [
     # Sratchpad
     EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("term")),
     EzKey("M-<grave>", lazy.group["scratchpad"].dropdown_toggle("grave")),
+    EzKey("M-u", lazy.function(switch_to_urgent_group)),
 ]
 
 # Mouse settings
