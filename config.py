@@ -231,6 +231,8 @@ layouts = [
     ),
     layout.MonadWide(
         **layout_theme,
+        single_border_width=0,
+        single_margin=0,
     ),
     # layout.Columns(**layout_theme),
     # layout.Tile(**layout_theme),
