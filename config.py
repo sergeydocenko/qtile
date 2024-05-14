@@ -69,10 +69,15 @@ def kill_other_windows(qtile):
 
 
 def switch_to_urgent_group(qtile):
-    """Switch to group fhere application set urgency flag"""
+    """Switch to group where application set urgency flag"""
     for group in qtile.groups:
         if any(w.urgent for w in group.windows):
             group.cmd_toscreen()
+            for w in group.windows:
+                if w.urgent:
+                    group.focus(w)
+                    break
+            break
 
 
 # The keys will be here
@@ -129,14 +134,13 @@ keys = [
         lazy.layout.grow(),
         lazy.layout.decrease_nmaster(),
     ),
-    # Reset layout
-    EzKey("M-S-n", lazy.layout.reset()),
     # Flip windows
     EzKey("M-A-h", lazy.layout.flip_left()),
     EzKey("M-A-l", lazy.layout.flip_right()),
     EzKey("M-A-j", lazy.layout.flip_down()),
     EzKey("M-A-k", lazy.layout.flip_up()),
     # Additional control
+    EzKey("M-S-n", lazy.layout.reset()),
     EzKey("M-n", lazy.layout.normalize()),
     EzKey("M-z", lazy.window.toggle_fullscreen(), desc="Zoom window"),
     # EzKey("M-f", lazy.window.toggle_floating()),
