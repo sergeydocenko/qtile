@@ -68,6 +68,13 @@ def kill_other_windows(qtile):
             window.kill()
 
 
+def kill_all_windows(qtile):
+    """Kills all windows in the current group."""
+    group = qtile.current_group
+    for window in group.windows:
+        window.kill()
+
+
 def switch_to_urgent_group(qtile):
     """Switch to group where application set urgency flag"""
     for group in qtile.groups:
@@ -89,6 +96,7 @@ keys = [
     # Close windows
     EzKey("M-x", lazy.window.kill()),
     EzKey("M-S-x", lazy.function(kill_other_windows)),
+    EzKey("M-C-x", lazy.function(kill_all_windows)),
     #
     EzKey("M-<bracketleft>", lazy.screen.prev_group()),
     EzKey("M-<bracketright>", lazy.screen.next_group()),
