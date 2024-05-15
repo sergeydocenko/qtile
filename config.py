@@ -102,6 +102,8 @@ keys = [
     EzKey("M-<bracketright>", lazy.screen.next_group()),
     EzKey("M-S-<bracketleft>", lazy.prev_layout()),
     EzKey("M-S-<bracketright>", lazy.next_layout()),
+    ##EzKey("M-S-<bracketleft>", lazy.group.swap_groups(1)),
+    ##EzKey("M-S-<bracketright>", lazy.group.swap_groups(1)),
     # Flip
     EzKey("M-f", lazy.layout.flip()),
     # Switch between windows
@@ -312,6 +314,9 @@ def icon_locator(icon_name):
     return os.path.join(qtile_path, "assets", icon_name)
 
 
+widget_background_accent = "#302f45"
+
+
 def top_bar_widgets():
     """Create top bar widgets"""
     widgets = [
@@ -331,21 +336,24 @@ def top_bar_widgets():
             mouse_callbacks={
                 "Button1": lambda: webbrowser.open("https://sinoptik.ua/погода-люботин")
             },
+            background=widget_background_accent,
         ),
         spacer(),
         widget.WidgetBox(
             text_closed="[•]",
             text_opened="[>]",
+            background=widget_background_accent,
             widgets=[
+                spacer(),
                 widget.Clock(
-                    background="#383748",
+                    background=widget_background_accent,
                     format="%Y-%m-%d %a",
                 ),
             ],
         ),
         spacer(),
         widget.Clock(
-            background="#383748",
+            background=widget_background_accent,
             format="%H:%M",
         ),
         spacer(),
@@ -358,30 +366,38 @@ def bottom_bar_widgets():
     """Create bottom bar widgets"""
     widgets = [
         widget.LaunchBar(
+            background=widget_background_accent,
             progs=[
                 (icon_locator("alacritty.png"), "alacritty"),
                 (icon_locator("firefox.png"), "firefox"),
                 (icon_locator("code.png"), "code"),
                 (icon_locator("obsidian.png"), "obsidian"),
                 (icon_locator("audacious.png"), "audacious -t"),
-            ]
+            ],
         ),
         widget.Spacer(),
         widget.WidgetBox(
             text_closed="[•]",
-            # text_closed="[HEALTH]",
             text_opened="[>]",
+            background=widget_background_accent,
             widgets=[
+                spacer(),
                 widget.CPU(
                     format=" {load_percent}%",
                     update_interval=10,
                     mouse_callbacks=htop_cpu_handler(),
+                    background=widget_background_accent,
                 ),
                 widget.CPUGraph(
                     frequency=5,
                     mouse_callbacks=htop_cpu_handler(),
+                    background=widget_background_accent,
                 ),
-                widget.ThermalSensor(format="{temp:.0f}{unit}", threshold=85),
+                widget.ThermalSensor(
+                    format="{temp:.0f}{unit}",
+                    threshold=85,
+                    background=widget_background_accent,
+                ),
                 spacer(),
                 widget.Memory(
                     format="{MemUsed: .0f}{mm}",
@@ -389,10 +405,12 @@ def bottom_bar_widgets():
                     measure_mem="G",
                     padding=0,
                     mouse_callbacks=htop_mem_handler(),
+                    background=widget_background_accent,
                 ),
                 widget.MemoryGraph(
                     frequency=5,
                     mouse_callbacks=htop_mem_handler(),
+                    background=widget_background_accent,
                 ),
                 spacer(),
                 widget.Net(
@@ -400,6 +418,7 @@ def bottom_bar_widgets():
                     prefix="M",
                     format="↓{down:.3f}{down_suffix} ↑{up:.3f}{up_suffix}",
                     mouse_callbacks=mtr_handler(),
+                    background=widget_background_accent,
                 ),
                 widget.NetGraph(
                     mouse_callbacks=mtr_handler(),
@@ -408,13 +427,14 @@ def bottom_bar_widgets():
                     interface=Env.Wlan,
                     mouse_callbacks=wavemon_handler(),
                     format="{percent:2.0%}",
+                    background=widget_background_accent,
                 ),
             ],
         ),
         spacer(),
         widget.Systray(
-            background="#383748",
             padding=5,
+            background="#8a7442",
         ),
     ]
     return widgets
