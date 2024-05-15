@@ -90,32 +90,22 @@ keys = [
     EzKey("M-C-j", lazy.layout.shuffle_down()),
     EzKey("M-C-k", lazy.layout.shuffle_up()),
     EzKey("M-C-m", lazy.layout.swap_main()),
-    # Grow windows
+    # Resuze windows
     EzKey(
         "M-S-h",
-        lazy.layout.grow_left(),
-        lazy.layout.shrink(),
-        lazy.layout.decrease_ratio(),
-        lazy.layout.add(),
-    ),
-    EzKey(
-        "M-S-l",
-        lazy.layout.grow_right(),
-        lazy.layout.grow(),
-        lazy.layout.increase_ratio(),
-        lazy.layout.delete(),
+        lazy.layout.shrink_main().when(layout="monadtall"),
     ),
     EzKey(
         "M-S-j",
-        lazy.layout.grow_down(),
-        lazy.layout.shrink(),
-        lazy.layout.increase_nmaster(),
+        lazy.layout.grow_main().when(layout="monadwide"),
     ),
     EzKey(
         "M-S-k",
-        lazy.layout.grow_up(),
-        lazy.layout.grow(),
-        lazy.layout.decrease_nmaster(),
+        lazy.layout.shrink_main().when(layout="monadwide"),
+    ),
+    EzKey(
+        "M-S-l",
+        lazy.layout.grow_main().when(layout="monadtall"),
     ),
     # Flip windows
     EzKey("M-A-h", lazy.layout.flip_left()),
@@ -232,7 +222,7 @@ layouts = [
     # layout.Columns(**layout_theme),
     # layout.Tile(**layout_theme),
     # layout.Bsp(**layout_theme),
-    layout.Max(**layout_theme),
+    # layout.Max(**layout_theme),
 ]
 
 floating_layout = layout.Floating(**layout_theme)
