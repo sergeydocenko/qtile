@@ -304,7 +304,7 @@ def top_bar_widgets():
             location={
                 "kharkiv": "kharkiv",
             },
-            format="%c %t %h",
+            format="%c%t %h",
             font="Hack Nerd Font",
             mouse_callbacks={
                 "Button1": lambda: webbrowser.open("https://sinoptik.ua/погода-люботин")
@@ -407,7 +407,7 @@ def bottom_bar_widgets():
         spacer(),
         widget.Systray(
             padding=5,
-            background="#8a7442",
+            background=widget_background_accent,
         ),
     ]
     return widgets
