@@ -34,16 +34,16 @@ super + Return
 ###############################################################################
 
 super + space
-    rofi -show drun -show-icons
+    rofi -show drun -show-icons -matching fuzzy
 
 super + shift + @space
-    rofi -show run -show-icons
+    rofi -show run -show-icons -matching fuzzy
 
 super + w
-    rofi -show window -show-icons
+    rofi -show window -show-icons -matching fuzzy
 
 super + v
-    rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
+    rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}' -matching fuzzy
 
 
 ###############################################################################
