@@ -10,6 +10,8 @@ import re
 from libqtile import layout, bar, widget, hook
 from libqtile.lazy import lazy
 from libqtile.config import (
+    Key,
+    KeyChord,
     EzDrag,
     EzKey,
     Group,
@@ -26,7 +28,7 @@ from func import (
     switch_to_urgent_group,
     swap_group_content,
 )
-
+from widgets.clock import ToggleClock
 
 locale.setlocale(locale.LC_TIME, "ru_UA")
 
@@ -123,8 +125,20 @@ keys = [
     # EzKey("M-f", lazy.window.toggle_floating()),
     EzKey("M-<Tab>", lazy.screen.toggle_group(), desc="Last active group"),
     # Sratchpad
-    EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("term")),
+    # EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("term")),
     EzKey("M-<grave>", lazy.group["scratchpad"].dropdown_toggle("grave")),
+    #
+    KeyChord(
+        [mod],
+        "s",
+        [
+            Key([], "s", lazy.group["scratchpad"].dropdown_toggle("term")),
+            Key([], "n", lazy.group["scratchpad"].dropdown_toggle("newsboat")),
+            Key([], "c", lazy.group["scratchpad"].dropdown_toggle("htop_cpu")),
+            Key([], "m", lazy.group["scratchpad"].dropdown_toggle("htop_mem")),
+            Key([], "w", lazy.group["scratchpad"].dropdown_toggle("wavemon")),
+        ],
+    ),
 ]
 
 # Mouse settings
@@ -191,6 +205,10 @@ groups.append(
             CreateScratchpad(
                 "wavemon",
                 "alacritty -e wavemon",
+            ),
+            CreateScratchpad(
+                "newsboat",
+                "alacritty -e tmux new-session -A -s 'newsboat' 'newsboat'",
             ),
         ],
     )
@@ -265,6 +283,11 @@ def wavemon_handler():
     return {"Button1": lazy.group["scratchpad"].dropdown_toggle("wavemon")}
 
 
+def newsboat_handler():
+    """Scratchpad with newsboat running"""
+    return {"Button1": lazy.group["scratchpad"].dropdown_toggle("newsboat")}
+
+
 def mtr_handler():
     """Scratchpad with mtr running"""
     return {
@@ -293,6 +316,12 @@ def top_bar_widgets():
         spacer(),
         widget.WindowName(),
         spacer(),
+        widget.TextBox(
+            "[N]",
+            background=widget_background_accent,
+            mouse_callbacks=newsboat_handler(),
+        ),
+        spacer(),
         widget.Wttr(
             location={
                 "kharkiv": "kharkiv",
@@ -305,22 +334,8 @@ def top_bar_widgets():
             background=widget_background_accent,
         ),
         spacer(),
-        widget.WidgetBox(
-            text_closed="[•]",
-            text_opened="[>]",
+        ToggleClock(
             background=widget_background_accent,
-            widgets=[
-                spacer(),
-                widget.Clock(
-                    background=widget_background_accent,
-                    format="%Y-%m-%d %a",
-                ),
-            ],
-        ),
-        spacer(),
-        widget.Clock(
-            background=widget_background_accent,
-            format="%H:%M",
         ),
         spacer(),
         widget.TextBox("[x]", mouse_callbacks={"Button1": lazy.window.kill()}),
@@ -382,7 +397,7 @@ def bottom_bar_widgets():
                 widget.Net(
                     interface=Env.Wlan,
                     prefix="M",
-                    format="↓{down:0.3f}{down_suffix} ↑{up:0.3f}{up_suffix}",
+                    format="  ↓{down:0.3f}{down_suffix} ↑{up:0.3f}{up_suffix}",
                     mouse_callbacks=mtr_handler(),
                     background=widget_background_accent,
                 ),
