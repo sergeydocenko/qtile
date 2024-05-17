@@ -24,7 +24,9 @@ from func import (
     kill_all_windows,
     kill_other_windows,
     switch_to_urgent_group,
+    swap_group_content,
 )
+
 
 locale.setlocale(locale.LC_TIME, "ru_UA")
 
@@ -73,10 +75,11 @@ keys = [
     #
     EzKey("M-<bracketleft>", lazy.screen.prev_group()),
     EzKey("M-<bracketright>", lazy.screen.next_group()),
+    #
+    EzKey("M-C-<bracketleft>", lazy.function(swap_group_content, direction=-1)),
+    EzKey("M-C-<bracketright>", lazy.function(swap_group_content, direction=1)),
     EzKey("M-S-<bracketleft>", lazy.prev_layout()),
     EzKey("M-S-<bracketright>", lazy.next_layout()),
-    ##EzKey("M-S-<bracketleft>", lazy.group.swap_groups(1)),
-    ##EzKey("M-S-<bracketright>", lazy.group.swap_groups(1)),
     # Flip
     EzKey("M-f", lazy.layout.flip()),
     # Switch between windows
@@ -116,12 +119,12 @@ keys = [
     EzKey("M-S-n", lazy.layout.reset()),
     EzKey("M-n", lazy.layout.normalize()),
     EzKey("M-z", lazy.window.toggle_fullscreen(), desc="Zoom window"),
+    EzKey("M-u", lazy.function(switch_to_urgent_group)),
     # EzKey("M-f", lazy.window.toggle_floating()),
     EzKey("M-<Tab>", lazy.screen.toggle_group(), desc="Last active group"),
     # Sratchpad
     EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("term")),
     EzKey("M-<grave>", lazy.group["scratchpad"].dropdown_toggle("grave")),
-    EzKey("M-u", lazy.function(switch_to_urgent_group)),
 ]
 
 # Mouse settings
@@ -363,7 +366,7 @@ def bottom_bar_widgets():
                 ),
                 spacer(),
                 widget.Memory(
-                    format="{MemUsed: .0f}{mm}",
+                    format="{MemUsed: .0f}{mm}{MemPercent: .0f}%",
                     update_interval=10,
                     measure_mem="G",
                     padding=0,
@@ -379,7 +382,7 @@ def bottom_bar_widgets():
                 widget.Net(
                     interface=Env.Wlan,
                     prefix="M",
-                    format="↓{down:.3f}{down_suffix} ↑{up:.3f}{up_suffix}",
+                    format="↓{down:0.3f}{down_suffix} ↑{up:0.3f}{up_suffix}",
                     mouse_callbacks=mtr_handler(),
                     background=widget_background_accent,
                 ),
