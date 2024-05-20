@@ -29,6 +29,7 @@ from func import (
     swap_group_content,
 )
 from widgets.clock import ToggleClock
+from widgets.newsboat import Newsboat
 
 locale.setlocale(locale.LC_TIME, "ru_UA")
 
@@ -316,17 +317,24 @@ def top_bar_widgets():
         spacer(),
         widget.WindowName(),
         spacer(),
-        widget.TextBox(
-            "[N]",
-            background=widget_background_accent,
-            mouse_callbacks=newsboat_handler(),
-        ),
+        # widget.TextBox(
+        #     ">",
+        #     background=widget_background_accent,
+        #     mouse_callbacks=newsboat_handler(),
+        # ),
+        # widget.GenPollText(
+        #    func=Newsboat,
+        #    update_interval=60,
+        #    mouse_callbacks=newsboat_handler(),
+        #    background=widget_background_accent,
+        # ),
+        # Newsboat("pizda"),
         spacer(),
         widget.Wttr(
             location={
                 "kharkiv": "kharkiv",
             },
-            format="%c%t %h",
+            format="%c%t%h",
             font="Hack Nerd Font",
             mouse_callbacks={
                 "Button1": lambda: webbrowser.open("https://sinoptik.ua/погода-люботин")
