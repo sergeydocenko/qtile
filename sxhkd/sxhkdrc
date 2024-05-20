@@ -2,17 +2,17 @@
 # Power management
 ###############################################################################
  
-super + p; o
+super + Escape; o
     notify-send "Power" "Shutdown";\
     sleep 3s;\
     systemctl poweroff
 
-super + p; r
+super + Escape; r
     notify-send "Power" "Reboot";\
     sleep 3s;\
     systemctl reboot
 
-super + p; s
+super + Escape; s
     notify-send "Power" "DPMS Off";\
     sleep 3s;\
     xset dpms force off
@@ -71,13 +71,19 @@ Print
 # Player
 ###############################################################################
 super + p; p
+    notify-send "playerctl" "Play/Pause"; \
     playerctl --player=audacious play-pause
 
 super + p; bracketleft
+    notify-send "playerctl" "Prev"; \
     playerctl --player=audacious previous
 
 super + p; bracketright
+    notify-send "playerctl" "Next"; \
     playerctl --player=audacious next 
+
+super + p; i
+    ${HOME}/.config/qtile/scripts/playerinfo.sh
 
 ###############################################################################
 # Games
