@@ -226,20 +226,23 @@ layout_theme = {
     "margin": 5,
     "border_focus": "#bf8b00",
     "border_normal": "#555555",
+    "single_border_width": 0,
+    "single_margin": 0,
 }
 
 layouts = [
     layout.MonadTall(
         **layout_theme,
-        new_client_position="bottom",
-        single_border_width=0,
-        single_margin=0,
+        # new_client_position="bottom",
+        # single_border_width=0,
+        # single_margin=0,
     ),
     layout.MonadWide(
         **layout_theme,
-        single_border_width=0,
-        single_margin=0,
+        # single_border_width=0,
+        # single_margin=0,
     ),
+    layout.RatioTile(**layout_theme),
     # layout.Columns(**layout_theme),
     # layout.Tile(**layout_theme),
     # layout.Bsp(**layout_theme),
@@ -318,16 +321,15 @@ def top_bar_widgets():
         spacer(),
         widget.WindowName(),
         spacer(),
-        widget.Wttr(
-            location={
-                "kharkiv": "kharkiv",
-            },
-            format="%c%t%h",
-            font="Hack Nerd Font",
+        widget.OpenWeather(
+            location="Kharkiv",
+            metric=True,
+            format="{icon}{main_temp:.0f}°{units_temperature} {wind_speed:.1f}m/s {wind_direction}",
+            update_interval=600,
+            background=widget_background_accent,
             mouse_callbacks={
                 "Button1": lambda: webbrowser.open("https://sinoptik.ua/погода-люботин")
             },
-            background=widget_background_accent,
         ),
         spacer(),
         ToggleClock(
