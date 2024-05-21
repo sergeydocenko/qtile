@@ -427,7 +427,7 @@ def init_screens():
     """Create screen layout"""
     return [
         Screen(
-            wallpaper=os.path.join(qtile_path, "assets", "triangle.jpg"),
+            wallpaper=os.path.join(qtile_path, "wallpapers", "triangle.jpg"),
             wallpaper_mode="stretch",
             top=bar.Bar(widgets=top_bar_widgets(), size=24),
             bottom=bar.Bar(widgets=bottom_bar_widgets(), size=24),
