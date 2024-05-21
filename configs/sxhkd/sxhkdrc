@@ -17,13 +17,12 @@ super + Escape; s
     sleep 3s;\
     xset dpms force off
 
-
 ###############################################################################
 # Terminal
 ###############################################################################
 
 super + Return
-    alacritty --config-file ~/.config/qtile/alacritty/alacritty.toml
+    alacritty --config-file ~/.config/qtile/configs/alacritty/alacritty.toml
         
 
 ###############################################################################
@@ -84,6 +83,14 @@ super + p; bracketright
 
 super + p; i
     ${HOME}/.config/qtile/scripts/playerinfo.sh
+
+super + p; s
+    notify-send "playerctl" "Stop"; \
+    playerctl --player=audacious stop 
+
+super + p; x
+    notify-send "playerctl" "Kill"; \
+    pkill audacious
 
 ###############################################################################
 # Games
