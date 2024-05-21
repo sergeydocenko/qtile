@@ -29,7 +29,6 @@ from func import (
     swap_group_content,
 )
 from widgets.clock import ToggleClock
-from widgets.newsboat import Newsboat
 
 locale.setlocale(locale.LC_TIME, "ru_UA")
 
@@ -300,7 +299,10 @@ def mtr_handler():
 
 
 def icon_locator(icon_name):
-    """Locate icon in resouce folder"""
+    """
+    Locate icon in resouce folder
+    return $QTILE/assets/icon_name
+    """
     return os.path.join(qtile_path, "assets", icon_name)
 
 
@@ -313,22 +315,8 @@ def top_bar_widgets():
         widget.GroupBox(highlight_method="block"),
         spacer(),
         widget.CurrentLayoutIcon(),
-        # widget.CurrentLayout(fmt="{} "),
         spacer(),
         widget.WindowName(),
-        spacer(),
-        # widget.TextBox(
-        #     ">",
-        #     background=widget_background_accent,
-        #     mouse_callbacks=newsboat_handler(),
-        # ),
-        # widget.GenPollText(
-        #    func=Newsboat,
-        #    update_interval=60,
-        #    mouse_callbacks=newsboat_handler(),
-        #    background=widget_background_accent,
-        # ),
-        # Newsboat("pizda"),
         spacer(),
         widget.Wttr(
             location={

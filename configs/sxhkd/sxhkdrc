@@ -71,6 +71,7 @@ Print
 ###############################################################################
 super + p; p
     notify-send "playerctl" "Play/Pause"; \
+    pgrep -x audacious > /dev/null || audacious --play; \
     playerctl --player=audacious play-pause
 
 super + p; bracketleft
