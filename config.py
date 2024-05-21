@@ -336,7 +336,11 @@ def top_bar_widgets():
             background=widget_background_accent,
         ),
         spacer(),
-        widget.TextBox("[x]", mouse_callbacks={"Button1": lazy.window.kill()}),
+        widget.TextBox(
+            "[<b>x</b>]",
+            background=widget_background_accent,
+            mouse_callbacks={"Button1": lazy.window.kill()},
+        ),
     ]
     return widgets
 
