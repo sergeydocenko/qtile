@@ -222,8 +222,8 @@ dgroups_app_rules = [
 ]
 
 layout_theme = {
-    "border_width": 5,
-    "margin": 5,
+    "border_width": 3,
+    "margin": 10,
     "border_focus": "#bf8b00",
     "border_normal": "#555555",
     "single_border_width": 0,
