@@ -223,9 +223,9 @@ dgroups_app_rules = [
 
 layout_theme = {
     "border_width": 3,
-    "margin": 10,
+    "margin": 7,
     "border_focus": "#bf8b00",
-    "border_normal": "#555555",
+    "border_normal": "#666666",
     "single_border_width": 0,
     "single_margin": 0,
 }
@@ -427,7 +427,8 @@ def init_screens():
     """Create screen layout"""
     return [
         Screen(
-            wallpaper=os.path.join(qtile_path, "wallpapers", "triangle.jpg"),
+            # wallpaper=os.path.join(qtile_path, "wallpapers", "triangle.jpg"),
+            wallpaper=os.path.join(qtile_path, "wallpapers", "hexes.jpg"),
             wallpaper_mode="stretch",
             top=bar.Bar(widgets=top_bar_widgets(), size=24),
             bottom=bar.Bar(widgets=bottom_bar_widgets(), size=24),
