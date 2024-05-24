@@ -125,7 +125,6 @@ keys = [
     # EzKey("M-f", lazy.window.toggle_floating()),
     EzKey("M-<Tab>", lazy.screen.toggle_group(), desc="Last active group"),
     # Sratchpad
-    # EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("term")),
     EzKey("M-<grave>", lazy.group["scratchpad"].dropdown_toggle("grave")),
     #
     KeyChord(
@@ -233,16 +232,13 @@ layout_theme = {
 layouts = [
     layout.MonadTall(
         **layout_theme,
-        # new_client_position="bottom",
-        # single_border_width=0,
-        # single_margin=0,
+        ratio=0.6,
     ),
     layout.MonadWide(
         **layout_theme,
-        # single_border_width=0,
-        # single_margin=0,
+        ratio=0.6,
     ),
-    layout.RatioTile(**layout_theme),
+    # layout.RatioTile(**layout_theme),
     # layout.Columns(**layout_theme),
     # layout.Tile(**layout_theme),
     # layout.Bsp(**layout_theme),
