@@ -17,6 +17,11 @@ super + q; s
     sleep 3s;\
     xset dpms force off
 
+super + BackSpace
+    notify-send "Power" "DPMS Off";\
+    sleep 1s;\
+    xset dpms force off
+
 ###############################################################################
 # Terminal
 ###############################################################################
