@@ -11,7 +11,9 @@ pkill sxhkd
 pkill dunst
 pkill volumeicon
 pkill picom
+pkill NetworkManager
 
+NetworkManager &
 greenclip daemon &
 nm-applet &
 xfce4-power-manager &
