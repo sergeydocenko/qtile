@@ -136,6 +136,7 @@ keys = [
             Key([], "c", lazy.group["scratchpad"].dropdown_toggle("htop_cpu")),
             Key([], "m", lazy.group["scratchpad"].dropdown_toggle("htop_mem")),
             Key([], "w", lazy.group["scratchpad"].dropdown_toggle("wavemon")),
+            Key([], "q", lazy.group["scratchpad"].dropdown_toggle("mtr")),
         ],
     ),
 ]
