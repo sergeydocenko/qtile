@@ -133,11 +133,19 @@ keys = [
         [
             Key([], "s", lazy.group["scratchpad"].dropdown_toggle("term")),
             Key([], "n", lazy.group["scratchpad"].dropdown_toggle("newsboat")),
-            Key([], "c", lazy.group["scratchpad"].dropdown_toggle("htop_cpu")),
-            Key([], "m", lazy.group["scratchpad"].dropdown_toggle("htop_mem")),
-            Key([], "w", lazy.group["scratchpad"].dropdown_toggle("wavemon")),
-            Key([], "q", lazy.group["scratchpad"].dropdown_toggle("mtr")),
+            KeyChord(
+                [],
+                "h",
+                [
+                    Key([], "c", lazy.group["scratchpad"].dropdown_toggle("htop_cpu")),
+                    Key([], "m", lazy.group["scratchpad"].dropdown_toggle("htop_mem")),
+                    Key([], "w", lazy.group["scratchpad"].dropdown_toggle("wavemon")),
+                    Key([], "t", lazy.group["scratchpad"].dropdown_toggle("mtr")),
+                ],
+                name="[c]-Cpu, [m]-Memory, [w]-WaveMon, [t]-Mtr",
+            ),
         ],
+        name="[s]-Scratch, [n]-Newsboat, [h]-Health",
     ),
 ]
 
@@ -411,6 +419,8 @@ def bottom_bar_widgets():
                 ),
             ],
         ),
+        spacer(),
+        widget.Chord(),
         spacer(),
         widget.Systray(
             padding=5,

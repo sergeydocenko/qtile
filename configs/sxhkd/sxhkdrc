@@ -17,9 +17,8 @@ super + q; s
     sleep 3s;\
     xset dpms force off
 
-super + BackSpace
-    notify-send "Power" "DPMS Off";\
-    sleep 1s;\
+super + @BackSpace
+    sleep 0.5s;\
     xset dpms force off
 
 ###############################################################################
@@ -27,7 +26,12 @@ super + BackSpace
 ###############################################################################
 
 super + Return
+    alacritty --config-file ~/.config/qtile/configs/alacritty/alacritty.toml -e \
+    tmux new-session -A -s 'default' -f ~/.config/qtile/configs/tmux/tmux.conf
+
+super + shift + Return
     alacritty --config-file ~/.config/qtile/configs/alacritty/alacritty.toml
+
         
 
 ###############################################################################
