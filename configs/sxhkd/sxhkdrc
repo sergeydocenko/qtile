@@ -27,7 +27,7 @@ super + @BackSpace
 
 super + Return
     alacritty --config-file ~/.config/qtile/configs/alacritty/alacritty.toml -e \
-    tmux new-session -A -s 'default' -f ~/.config/qtile/configs/tmux/tmux.conf
+    tmux -f ~/.config/qtile/configs/tmux/tmux.conf new-session -A -s 'default'
 
 super + shift + Return
     alacritty --config-file ~/.config/qtile/configs/alacritty/alacritty.toml
