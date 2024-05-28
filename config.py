@@ -33,6 +33,7 @@ from widgets.clock import ToggleClock
 locale.setlocale(locale.LC_TIME, "ru_UA")
 
 qtile_path = os.path.join(os.path.expanduser("~"), ".config", "qtile")
+tmux_config = f"{qtile_path}/configs/tmux/tmux.conf"
 
 # pylint: disable=C0103
 main = None
@@ -126,6 +127,7 @@ keys = [
     EzKey("M-<Tab>", lazy.screen.toggle_group(), desc="Last active group"),
     # Sratchpad
     EzKey("M-<grave>", lazy.group["scratchpad"].dropdown_toggle("grave")),
+    EzKey("M-a", lazy.group["scratchpad"].dropdown_toggle("audacious")),
     #
     KeyChord(
         [mod],
@@ -172,15 +174,15 @@ for i in groups:
     )
 
 
-def CreateScratchpad(name, command):
+def CreateScratchpad(name, command, height=0.9, width=0.9):
     """Create named scratchpad with command"""
     return DropDown(
         name,
         command,
-        height=0.9,
-        width=0.9,
-        y=0.05,
-        x=0.05,
+        height=height,
+        width=width,
+        y=(1 - height) / 2,
+        x=(1 - width) / 2,
         warp_pointer=True,
     )
 
@@ -192,11 +194,11 @@ groups.append(
         [
             CreateScratchpad(
                 "grave",
-                "alacritty -e tmux new-session -A -s 'grave'",
+                f"alacritty -e tmux -f {tmux_config} new-session -A -s 'grave'",
             ),
             CreateScratchpad(
                 "term",
-                "alacritty -e tmux new-session -A -s 'scratch'",
+                f"alacritty -e tmux -f {tmux_config} new-session -A -s 'scratch'",
             ),
             CreateScratchpad(
                 "htop_mem",
@@ -217,6 +219,10 @@ groups.append(
             CreateScratchpad(
                 "newsboat",
                 "alacritty -e tmux new-session -A -s 'newsboat' 'newsboat'",
+            ),
+            CreateScratchpad(
+                "audacious",
+                "audacious",
             ),
         ],
     )
@@ -361,6 +367,12 @@ def bottom_bar_widgets():
                 (icon_locator("code.png"), "code"),
                 (icon_locator("obsidian.png"), "obsidian"),
                 (icon_locator("audacious.png"), "audacious -t"),
+                # (
+                #    icon_locator("audacious.png"),
+                #    "qtile cmd-obj -o group scratchpad -f audacious",
+                # ),
+                # lazy.group["scratchpad"].dropdown_toggle("audacious"),
+                # ('Scratchpad', 'qtile cmd-obj -o group scratchpad -f dropdown_toggle', 'Toggle Scratchpad')
             ],
         ),
         widget.Spacer(),
