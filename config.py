@@ -194,11 +194,11 @@ groups.append(
         [
             CreateScratchpad(
                 "grave",
-                f"alacritty -e tmux -f {tmux_config} new-session -A -s 'grave'",
+                f"alacritty -e tmux -f '{tmux_config}' new-session -A -s 'grave'",
             ),
             CreateScratchpad(
                 "term",
-                f"alacritty -e tmux -f {tmux_config} new-session -A -s 'scratch'",
+                f"alacritty -e tmux -f '{tmux_config}' new-session -A -s 'scratch'",
             ),
             CreateScratchpad(
                 "htop_mem",
@@ -218,7 +218,7 @@ groups.append(
             ),
             CreateScratchpad(
                 "newsboat",
-                "alacritty -e tmux new-session -A -s 'newsboat' 'newsboat'",
+                f"alacritty -e tmux -f '{tmux_config}' new-session -A -s 'newsboat' 'newsboat'",
             ),
             CreateScratchpad(
                 "audacious",
