@@ -230,7 +230,7 @@ groups.append(
 
 
 dgroups_app_rules = [
-    Rule(Match(wm_class=re.compile("^[Aa]udacious")), group="PLAYER"),
+    # Rule(Match(wm_class=re.compile("^[Aa]udacious")), group="PLAYER"),
     # Rule(Match(wm_class=re.compile("[Navigator|firefox]")), group="1"),
     Rule(Match(wm_class=re.compile("^code-oss")), group="2"),
 ]
@@ -366,11 +366,11 @@ def bottom_bar_widgets():
                 (icon_locator("firefox.png"), "firefox"),
                 (icon_locator("code.png"), "code"),
                 (icon_locator("obsidian.png"), "obsidian"),
-                (icon_locator("audacious.png"), "audacious -t"),
-                # (
-                #    icon_locator("audacious.png"),
-                #    "qtile cmd-obj -o group scratchpad -f audacious",
-                # ),
+                # (icon_locator("audacious.png"), "audacious -t"),
+                (
+                    icon_locator("audacious.png"),
+                    "qtile cmd-obj -o group scratchpad -f audacious",
+                ),
                 # lazy.group["scratchpad"].dropdown_toggle("audacious"),
                 # ('Scratchpad', 'qtile cmd-obj -o group scratchpad -f dropdown_toggle', 'Toggle Scratchpad')
             ],
