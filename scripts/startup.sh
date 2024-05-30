@@ -20,7 +20,7 @@ xfce4-power-manager &
 volumeicon &
 sxhkd -c "$CONFIGS/sxhkd/sxhkdrc" &
 DUNST_CONFIG="$CONFIGS/dunst/dunstrc" dunst &
-picom --config "$CONFIGS/picom/picom.conf" &
+# picom --config "$CONFIGS/picom/picom.conf" &
 tmux source-file "$CONFIGS/tmux/tmux.conf" &
 
 setxkbmap -layout "us,ru" -option "grp:caps_toggle,grp_led:caps"
