@@ -74,13 +74,15 @@ super + t; r
 Print
     flameshot gui
 
+super + d
+    notify-send "Date/Time" "$(date +'%Y-%m-%d %H:%M:%S')"
+
 
 ###############################################################################
 # Player
 ###############################################################################
 super + p; p
     notify-send "playerctl" "Play/Pause"; \
-    pgrep -x audacious > /dev/null || audacious --play; \
     playerctl --player=audacious play-pause
 
 super + p; bracketleft
@@ -94,13 +96,6 @@ super + p; bracketright
 super + p; i
     ${HOME}/.config/qtile/scripts/playerinfo.sh
 
-super + p; s
-    notify-send "playerctl" "Stop"; \
-    playerctl --player=audacious stop 
-
-super + p; x
-    notify-send "playerctl" "Kill"; \
-    pkill audacious
 
 ###############################################################################
 # Games
