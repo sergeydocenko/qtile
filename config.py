@@ -125,29 +125,22 @@ keys = [
     EzKey("M-u", lazy.function(switch_to_urgent_group)),
     # EzKey("M-f", lazy.window.toggle_floating()),
     EzKey("M-<Tab>", lazy.screen.toggle_group(), desc="Last active group"),
-    # Sratchpad
+    # Sratchpads
     EzKey("M-<grave>", lazy.group["scratchpad"].dropdown_toggle("grave")),
+    EzKey("M-s", lazy.group["scratchpad"].dropdown_toggle("scratch")),
     EzKey("M-a", lazy.group["scratchpad"].dropdown_toggle("audacious")),
     #
     KeyChord(
         [mod],
-        "s",
+        "o",
         [
-            Key([], "s", lazy.group["scratchpad"].dropdown_toggle("term")),
             Key([], "n", lazy.group["scratchpad"].dropdown_toggle("newsboat")),
-            KeyChord(
-                [],
-                "h",
-                [
-                    Key([], "c", lazy.group["scratchpad"].dropdown_toggle("htop_cpu")),
-                    Key([], "m", lazy.group["scratchpad"].dropdown_toggle("htop_mem")),
-                    Key([], "w", lazy.group["scratchpad"].dropdown_toggle("wavemon")),
-                    Key([], "t", lazy.group["scratchpad"].dropdown_toggle("mtr")),
-                ],
-                name="[c]-Cpu, [m]-Memory, [w]-WaveMon, [t]-Mtr",
-            ),
+            Key([], "c", lazy.group["scratchpad"].dropdown_toggle("htop_cpu")),
+            Key([], "m", lazy.group["scratchpad"].dropdown_toggle("htop_mem")),
+            Key([], "w", lazy.group["scratchpad"].dropdown_toggle("wavemon")),
+            Key([], "t", lazy.group["scratchpad"].dropdown_toggle("mtr")),
         ],
-        name="[s]-Scratch, [n]-Newsboat, [h]-Health",
+        name="[n]-News [c]-Cpu [m]-Memory [w]-WaveMon [t]-Mtr",
     ),
 ]
 
@@ -197,7 +190,7 @@ groups.append(
                 f"alacritty -e tmux -f '{tmux_config}' new-session -A -s 'grave'",
             ),
             CreateScratchpad(
-                "term",
+                "scratch",
                 f"alacritty -e tmux -f '{tmux_config}' new-session -A -s 'scratch'",
             ),
             CreateScratchpad(
@@ -360,20 +353,13 @@ def bottom_bar_widgets():
     """Create bottom bar widgets"""
     widgets = [
         widget.LaunchBar(
-            background=widget_background_accent,
             progs=[
                 (icon_locator("alacritty.png"), "alacritty"),
                 (icon_locator("firefox.png"), "firefox"),
                 (icon_locator("code.png"), "code"),
                 (icon_locator("obsidian.png"), "obsidian"),
-                # (icon_locator("audacious.png"), "audacious -t"),
-                (
-                    icon_locator("audacious.png"),
-                    "qtile cmd-obj -o group scratchpad -f audacious",
-                ),
-                # lazy.group["scratchpad"].dropdown_toggle("audacious"),
-                # ('Scratchpad', 'qtile cmd-obj -o group scratchpad -f dropdown_toggle', 'Toggle Scratchpad')
             ],
+            background=widget_background_accent,
         ),
         widget.Spacer(),
         widget.WidgetBox(
@@ -435,6 +421,7 @@ def bottom_bar_widgets():
         widget.Chord(),
         spacer(),
         widget.Systray(
+            icon_size=20,
             padding=5,
             background=widget_background_accent,
         ),
