@@ -319,7 +319,12 @@ widget_background_accent = "#302f45"
 def top_bar_widgets():
     """Create top bar widgets"""
     widgets = [
-        widget.GroupBox(highlight_method="block"),
+        widget.GroupBox(
+            highlight_method="block",
+            disable_drag=True,
+            rounded=True,
+            background=widget_background_accent,
+        ),
         spacer(),
         widget.CurrentLayoutIcon(),
         spacer(),
@@ -445,12 +450,10 @@ def init_screens():
 screens = init_screens()
 
 
-floating_types = ["notification", "toolbar", "splash", "dialog", "popup"]
-
-
 @hook.subscribe.client_new
 def set_floating(window):
     """Automatically sets window floating attribute for certain windows type"""
+    floating_types = ["notification", "toolbar", "splash", "dialog", "popup"]
     if (
         window.window.get_wm_transient_for()
         or window.window.get_wm_type() in floating_types
