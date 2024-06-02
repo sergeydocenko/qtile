@@ -75,7 +75,7 @@ Print
     flameshot gui
 
 super + d
-    notify-send "Date/Time" "$(date +'%Y-%m-%d %H:%M:%S')"
+    notify-send "Date/Time" "$(date +'%Y-%m-%d %H:%M')"
 
 
 ###############################################################################
