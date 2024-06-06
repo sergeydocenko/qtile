@@ -27,13 +27,22 @@ from func import (
     kill_other_windows,
     switch_to_urgent_group,
     swap_group_content,
+    open_project,
 )
 from widgets.clock import ToggleClock
 
 locale.setlocale(locale.LC_TIME, "ru_UA")
 
-qtile_path = os.path.join(os.path.expanduser("~"), ".config", "qtile")
-tmux_config = f"{qtile_path}/configs/tmux/tmux.conf"
+
+class Paths:
+    """Important path"""
+
+    qtile = os.path.join(os.path.expanduser("~"), ".config", "qtile")
+    tools = os.path.join(qtile, "configs")
+    assets = os.path.join(qtile, "assets")
+    tmux_config = os.path.join(tools, "tmux", "tmux.conf")
+    scripts = os.path.join(qtile, "scripts")
+
 
 # pylint: disable=C0103
 main = None
@@ -139,6 +148,7 @@ keys = [
             Key([], "m", lazy.group["scratchpad"].dropdown_toggle("htop_mem")),
             Key([], "w", lazy.group["scratchpad"].dropdown_toggle("wavemon")),
             Key([], "t", lazy.group["scratchpad"].dropdown_toggle("mtr")),
+            Key([], "p", open_project, desc="Open tmux project session"),
         ],
         name="[n]-News [c]-Cpu [m]-Memory [w]-WaveMon [t]-Mtr",
     ),
@@ -187,11 +197,11 @@ groups.append(
         [
             CreateScratchpad(
                 "grave",
-                f"alacritty -e tmux -f '{tmux_config}' new-session -A -s 'grave'",
+                f"alacritty -e tmux -f '{Paths.tmux_config}' new-session -A -s 'grave'",
             ),
             CreateScratchpad(
                 "scratch",
-                f"alacritty -e tmux -f '{tmux_config}' new-session -A -s 'scratch'",
+                f"alacritty -e tmux -f '{Paths.tmux_config}' new-session -A -s 'scratch'",
             ),
             CreateScratchpad(
                 "htop_mem",
@@ -211,7 +221,7 @@ groups.append(
             ),
             CreateScratchpad(
                 "newsboat",
-                f"alacritty -e tmux -f '{tmux_config}' new-session -A -s 'newsboat' 'newsboat'",
+                f"alacritty -e tmux -f '{Paths.tmux_config}' new-session -A -s 'newsboat' 'newsboat'",
             ),
             CreateScratchpad(
                 "audacious",
@@ -310,7 +320,7 @@ def icon_locator(icon_name):
     Locate icon in resouce folder
     return $QTILE/assets/icon_name
     """
-    return os.path.join(qtile_path, "assets", icon_name)
+    return os.path.join(Paths.assets, icon_name)
 
 
 widget_background_accent = "#302f45"
@@ -323,12 +333,14 @@ def top_bar_widgets():
             highlight_method="block",
             disable_drag=True,
             rounded=True,
-            background=widget_background_accent,
+            # background=widget_background_accent,
         ),
         spacer(),
         widget.CurrentLayoutIcon(),
         spacer(),
-        widget.WindowName(),
+        widget.WindowName(
+            # background=widget_background_accent,
+        ),
         spacer(),
         widget.OpenWeather(
             location="Kharkiv",
@@ -423,12 +435,20 @@ def bottom_bar_widgets():
             ],
         ),
         spacer(),
-        widget.Chord(),
-        spacer(),
         widget.Systray(
             icon_size=20,
             padding=5,
             background=widget_background_accent,
+        ),
+        spacer(),
+        widget.TextBox(
+            "[<b>N</b>]",
+            background=widget_background_accent,
+            mouse_callbacks={
+                "Button1": lambda: subprocess.call(
+                    os.path.join(Paths.scripts, "nmrestart.sh")
+                )
+            },
         ),
     ]
     return widgets
@@ -439,7 +459,7 @@ def init_screens():
     return [
         Screen(
             # wallpaper=os.path.join(qtile_path, "wallpapers", "triangle.jpg"),
-            wallpaper=os.path.join(qtile_path, "wallpapers", "hexes.jpg"),
+            wallpaper=os.path.join(Paths.assets, "wallpapers", "hexes.jpg"),
             wallpaper_mode="stretch",
             top=bar.Bar(widgets=top_bar_widgets(), size=24),
             bottom=bar.Bar(widgets=bottom_bar_widgets(), size=24),
