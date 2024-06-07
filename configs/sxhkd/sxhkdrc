@@ -32,6 +32,9 @@ ctrl + alt + n
 # Terminal
 ###############################################################################
 
+#super + Return
+#    wezterm --config-file ~/.config/qtile/configs/wezterm/wezterm.lua
+
 super + Return
     alacritty --config-file ~/.config/qtile/configs/alacritty/alacritty.toml -e \
     tmux -f ~/.config/qtile/configs/tmux/tmux.conf new-session -A -s 'default'
