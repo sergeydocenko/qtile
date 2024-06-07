@@ -27,7 +27,6 @@ from func import (
     kill_other_windows,
     switch_to_urgent_group,
     swap_group_content,
-    open_project,
 )
 from widgets.clock import ToggleClock
 
@@ -40,6 +39,7 @@ class Paths:
     qtile = os.path.join(os.path.expanduser("~"), ".config", "qtile")
     tools = os.path.join(qtile, "configs")
     assets = os.path.join(qtile, "assets")
+    wallpapers = os.path.join(qtile, "wallpapers")
     tmux_config = os.path.join(tools, "tmux", "tmux.conf")
     scripts = os.path.join(qtile, "scripts")
 
@@ -148,7 +148,6 @@ keys = [
             Key([], "m", lazy.group["scratchpad"].dropdown_toggle("htop_mem")),
             Key([], "w", lazy.group["scratchpad"].dropdown_toggle("wavemon")),
             Key([], "t", lazy.group["scratchpad"].dropdown_toggle("mtr")),
-            Key([], "p", open_project, desc="Open tmux project session"),
         ],
         name="[n]-News [c]-Cpu [m]-Memory [w]-WaveMon [t]-Mtr",
     ),
@@ -458,8 +457,7 @@ def init_screens():
     """Create screen layout"""
     return [
         Screen(
-            # wallpaper=os.path.join(qtile_path, "wallpapers", "triangle.jpg"),
-            wallpaper=os.path.join(Paths.assets, "wallpapers", "hexes.jpg"),
+            wallpaper=os.path.join(Paths.wallpapers, "hexes.jpg"),
             wallpaper_mode="stretch",
             top=bar.Bar(widgets=top_bar_widgets(), size=24),
             bottom=bar.Bar(widgets=bottom_bar_widgets(), size=24),
